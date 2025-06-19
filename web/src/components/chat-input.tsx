@@ -27,7 +27,7 @@ export function ChatInput({ input, setInput, onSend, onFileAttach }: ChatInputPr
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Type your message..."
-          className="min-h-[60px] max-h-[200px] resize-none pr-20 pl-12"
+          className="min-h-[80px] max-h-[200px] resize-none pr-20 pl-12 pb-8"
           rows={3}
         />
         <Button
