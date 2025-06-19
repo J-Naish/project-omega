@@ -30,22 +30,24 @@ export function ChatInput({ input, setInput, onSend, onFileAttach }: ChatInputPr
           className="min-h-[80px] max-h-[200px] resize-none pr-20 pl-12 pb-8"
           rows={3}
         />
-        <Button
-          variant="ghost"
-          size="icon"
-          className="absolute left-2 bottom-2 h-8 w-8"
-          onClick={onFileAttach}
-        >
-          <Paperclip className="h-4 w-4" />
-        </Button>
-        <Button
-          onClick={onSend}
-          disabled={!input.trim()}
-          size="icon"
-          className="absolute right-2 bottom-2 h-8 w-8"
-        >
-          <Send className="h-4 w-4" />
-        </Button>
+        <div className="absolute bottom-2 w-full flex justify-between px-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 cursor-pointer"
+            onClick={onFileAttach}
+          >
+            <Paperclip className="h-4 w-4" />
+          </Button>
+          <Button
+            onClick={onSend}
+            disabled={!input.trim()}
+            size="icon"
+            className="h-8 w-8 cursor-pointer"
+          >
+            <Send className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
     </div>
   );
