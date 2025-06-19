@@ -20,7 +20,7 @@ export function ChatInput({ input, setInput, onSend, onFileAttach }: ChatInputPr
   };
 
   return (
-    <div className="border-t bg-background p-4">
+    <div className="p-4">
       <div className="relative">
         <Textarea
           value={input}
