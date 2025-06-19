@@ -22,15 +22,15 @@ export function MessageArea({ messages }: MessageAreaProps) {
               message.role === "user" ? "justify-end" : "justify-start"
             }`}
           >
-            <Card
-              className={`max-w-[80%] p-4 ${
-                message.role === "user"
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted"
-              }`}
-            >
-              <p className="whitespace-pre-wrap">{message.content}</p>
-            </Card>
+{message.role === "user" ? (
+              <Card className="max-w-[80%] p-4 bg-primary text-primary-foreground">
+                <p className="whitespace-pre-wrap">{message.content}</p>
+              </Card>
+            ) : (
+              <div className="max-w-[80%]">
+                <p className="whitespace-pre-wrap text-foreground">{message.content}</p>
+              </div>
+            )}
           </div>
         ))
       )}
