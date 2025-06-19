@@ -16,7 +16,7 @@ export function MessageArea({ messages }: MessageAreaProps) {
               message.role === "user" ? "justify-end" : "justify-start"
             }`}
           >
-{message.role === "user" ? (
+            {message.role === "user" ? (
               <Card className="max-w-[80%] p-4 bg-primary text-primary-foreground">
                 <p className="whitespace-pre-wrap">{message.content}</p>
               </Card>
