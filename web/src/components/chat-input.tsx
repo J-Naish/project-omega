@@ -6,8 +6,8 @@ import { Send, Paperclip } from "lucide-react";
 
 interface ChatInputProps {
   input: string;
-  setInput: (value: string) => void;
-  onSend: () => void;
+  setInput: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onSend: (e: React.FormEvent) => void;
   onFileAttach?: () => void;
 }
 
@@ -15,7 +15,7 @@ export function ChatInput({ input, setInput, onSend, onFileAttach }: ChatInputPr
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      onSend();
+      onSend(e as any);
     }
   };
 
@@ -24,7 +24,7 @@ export function ChatInput({ input, setInput, onSend, onFileAttach }: ChatInputPr
       <div className="relative">
         <Textarea
           value={input}
-          onChange={(e) => setInput(e.target.value)}
+          onChange={setInput}
           onKeyDown={handleKeyDown}
           placeholder="Type your message..."
           className="min-h-[80px] max-h-[200px] resize-none pr-20 pl-12 pb-8"
@@ -40,7 +40,7 @@ export function ChatInput({ input, setInput, onSend, onFileAttach }: ChatInputPr
             <Paperclip className="h-4 w-4" />
           </Button>
           <Button
-            onClick={onSend}
+            onClick={(e) => onSend(e)}
             disabled={!input.trim()}
             size="icon"
             className="h-8 w-8 cursor-pointer"

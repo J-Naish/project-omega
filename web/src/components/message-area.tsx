@@ -1,11 +1,5 @@
 import { Card } from "@/components/ui/card";
-
-interface Message {
-  id: string;
-  content: string;
-  role: "user" | "assistant";
-  timestamp: Date;
-}
+import { type Message } from "ai";
 
 interface MessageAreaProps {
   messages: Message[];
