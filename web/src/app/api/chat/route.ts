@@ -8,7 +8,13 @@ export async function POST(req: Request) {
 
   const transport = new Experimental_StdioMCPTransport({
     command: "node",
-    args: ["/Users/nash/production/vertex/project-omega/mcp-servers/notion/bin/cli.mjs"]
+    args: ["/Users/nash/production/vertex/project-omega/mcp-servers/notion/bin/cli.mjs"],
+    env: {
+      OPENAPI_MCP_HEADERS: JSON.stringify({
+        "Authorization": `Bearer ${process.env.NOTION_TOKEN}`,
+        "Notion-Version": "2022-06-28"
+      })
+    }
   });
 
   const mcpClient = await createMCPClient({
