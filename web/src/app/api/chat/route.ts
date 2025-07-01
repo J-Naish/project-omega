@@ -1,15 +1,18 @@
 import { anthropic } from "@ai-sdk/anthropic";
 import { streamText } from "ai";
 import { experimental_createMCPClient as createMCPClient } from "ai";
+import { Experimental_StdioMCPTransport } from "ai/mcp-stdio";
 import { systemPrompt } from "./systemPrompt";
 
 export async function POST(req: Request) {
 
+  const transport = new Experimental_StdioMCPTransport({
+    command: "node",
+    args: ["/Users/nash/production/vertex/project-omega/mcp-servers/notion/bin/cli.mjs"]
+  });
+
   const mcpClient = await createMCPClient({
-    transport: {
-      type: "sse",
-      url: ""
-    }
+    transport,
   });
 
   const { messages } = await req.json();
