@@ -1,5 +1,7 @@
 services:
   notion-mcp-server:
+    env_file:
+      - .env
     build: .
     stdin_open: true
     tty: true
