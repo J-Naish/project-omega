@@ -1,7 +1,7 @@
 import { anthropic } from "@ai-sdk/anthropic";
 import { streamText } from "ai";
 import { experimental_createMCPClient as createMCPClient } from "ai";
-import { systemPrompt } from "../systemPrompt";
+import { systemPrompt } from "./systemPrompt";
 
 export async function POST(req: Request) {
 
