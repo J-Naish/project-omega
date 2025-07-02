@@ -6,7 +6,7 @@ import { systemPrompt } from "./systemPrompt";
 
 export async function POST(req: Request) {
 
-  const transport = new Experimental_StdioMCPTransport({
+  const notionTransport = new Experimental_StdioMCPTransport({
     command: "node",
     args: ["/Users/nash/production/vertex/project-omega/mcp-servers/notion/bin/cli.mjs"],
     env: {
@@ -17,13 +17,18 @@ export async function POST(req: Request) {
     }
   });
 
-  const mcpClient = await createMCPClient({
-    transport,
+  const notionMcpClient = await createMCPClient({
+    transport: notionTransport,
   });
 
-  const { messages } = await req.json();
+  const notionTools = await notionMcpClient.tools();
 
-  const tools = await mcpClient.tools();
+  const tools = {
+    ...notionTools,
+  }
+
+
+  const { messages } = await req.json();
 
   const result = streamText({
     model: anthropic("claude-3-7-sonnet-20250219"),
@@ -31,7 +36,7 @@ export async function POST(req: Request) {
     system: systemPrompt,
     tools,
     onFinish: ()=> {
-      mcpClient.close();
+      notionMcpClient.close();
     },
   });
 
