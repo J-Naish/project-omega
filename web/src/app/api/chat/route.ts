@@ -55,6 +55,7 @@ export async function POST(req: Request) {
     tools,
     onFinish: ()=> {
       notionMcpClient.close();
+      slackMcpClient.close();
     },
   });
 
