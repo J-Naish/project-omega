@@ -23,9 +23,27 @@ export async function POST(req: Request) {
 
   const notionTools = await notionMcpClient.tools();
 
+
+  const slackTransport = new Experimental_StdioMCPTransport({
+    command: "node",
+      args: ["/Users/nash/production/vertex/project-omega/mcp-servers/slack/dist/index.js"],
+      env: {
+        SLACK_TEAM_ID: process.env.SLACK_TEAM_ID!,
+        SLACK_BOT_TOKEN: process.env.SLACK_BOT_TOKEN!,
+      }
+  });
+
+  const slackMcpClient = await createMCPClient({
+    transport: slackTransport,
+  });
+
+  const slackTools = await slackMcpClient.tools();
+
+
   const tools = {
     ...notionTools,
-  }
+    ...slackTools
+  };
 
 
   const { messages } = await req.json();
