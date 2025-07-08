@@ -3,6 +3,7 @@ import { streamText } from "ai";
 import { experimental_createMCPClient as createMCPClient } from "ai";
 import { Experimental_StdioMCPTransport } from "ai/mcp-stdio";
 import { systemPrompt } from "./systemPrompt";
+import { webSearch } from "./web-search";
 
 export async function POST(req: Request) {
   console.log('[MCP] Starting API route...');
@@ -50,7 +51,8 @@ export async function POST(req: Request) {
 
     const tools = {
       ...notionTools,
-      ...slackTools
+      ...slackTools,
+      webSearch
     };
     console.log('[MCP] Combined tools:', Object.keys(tools));
 
