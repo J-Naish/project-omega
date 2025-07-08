@@ -53,10 +53,29 @@ export async function POST(req: Request) {
     messages,
     system: systemPrompt,
     tools,
-    onFinish: ()=> {
+    maxSteps: 5,
+    experimental_toolCallStreaming: true,
+    onChunk: ({ chunk }) => {
+      if (chunk.type === 'tool-call') {
+        console.log(`[MCP] Calling tool: ${chunk.toolName}`);
+      } else if (chunk.type === 'tool-result') {
+        console.log(`[MCP] Tool result received for: ${chunk.toolCallId}`);
+      }
+    },
+    onStepFinish: ({ toolCalls }) => {
+      if (toolCalls && toolCalls.length > 0) {
+        console.log(`[MCP] Step completed with ${toolCalls.length} tool calls`);
+      }
+    },
+    onFinish: () => {
       notionMcpClient.close();
       slackMcpClient.close();
     },
+    onError: (error) => {
+      console.error('[MCP] Stream error:', error);
+      notionMcpClient.close();
+      slackMcpClient.close();
+    }
   });
 
   return result.toDataStreamResponse();
