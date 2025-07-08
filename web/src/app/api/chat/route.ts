@@ -54,7 +54,7 @@ export async function POST(req: Request) {
     system: systemPrompt,
     tools,
     maxSteps: 5,
-    experimental_toolCallStreaming: true,
+    toolCallStreaming: true,
     onChunk: ({ chunk }) => {
       if (chunk.type === 'tool-call') {
         console.log(`[MCP] Calling tool: ${chunk.toolName}`);
