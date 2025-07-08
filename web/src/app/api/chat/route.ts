@@ -12,7 +12,7 @@ export async function POST(req: Request) {
     console.log('[MCP] Creating Notion transport...');
     const notionTransport = new Experimental_StdioMCPTransport({
       command: "node",
-      args: ["/Users/nash/production/vertex/project-omega/mcp-servers/notion/bin/cli.mjs"],
+      args: [`${process.env.PROJECT_PATH}/project-omega/mcp-servers/notion/bin/cli.mjs`],
       env: {
         OPENAPI_MCP_HEADERS: JSON.stringify({
           "Authorization": `Bearer ${process.env.NOTION_TOKEN}`,
@@ -33,7 +33,7 @@ export async function POST(req: Request) {
     console.log('[MCP] Creating Slack transport...');
     const slackTransport = new Experimental_StdioMCPTransport({
       command: "node",
-        args: ["/Users/nash/production/vertex/project-omega/mcp-servers/slack/dist/index.js"],
+        args: [`${process.env.PROJECT_PATH}/project-omega/mcp-servers/slack/dist/index.js`],
         env: {
           SLACK_TEAM_ID: process.env.SLACK_TEAM_ID!,
           SLACK_BOT_TOKEN: process.env.SLACK_BOT_TOKEN!,
