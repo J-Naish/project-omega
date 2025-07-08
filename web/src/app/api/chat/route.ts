@@ -22,7 +22,7 @@ export async function POST(req: Request) {
   });
 
   const notionTools = await notionMcpClient.tools();
-
+  console.log('[MCP] Notion tools loaded:', Object.keys(notionTools));
 
   const slackTransport = new Experimental_StdioMCPTransport({
     command: "node",
@@ -38,12 +38,13 @@ export async function POST(req: Request) {
   });
 
   const slackTools = await slackMcpClient.tools();
-
+  console.log('[MCP] Slack tools loaded:', Object.keys(slackTools));
 
   const tools = {
     ...notionTools,
     ...slackTools
   };
+  console.log('[MCP] Combined tools:', Object.keys(tools));
 
 
   const { messages } = await req.json();
