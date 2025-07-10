@@ -3,6 +3,8 @@
 # Project Omega Startup Script
 # This script starts all components of the project
 
+git pull
+
 set -e  # Exit on any error
 
 # Colors for output
