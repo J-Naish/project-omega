@@ -1,20 +1,20 @@
 #!/bin/bash
 
-# Project Omega Startup Script
-# This script starts all components of the project
+# Project Omega 起動スクリプト
+# このスクリプトはプロジェクトのすべてのコンポーネントを起動します
 
 git pull
 
-set -e  # Exit on any error
+set -e  # エラーが発生したら終了
 
-# Colors for output
+# 出力用の色
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+NC='\033[0m' # 色なし
 
-# Function to print colored output
+# 色付き出力を表示する関数
 print_status() {
     echo -e "${BLUE}[INFO]${NC} $1"
 }
@@ -31,60 +31,60 @@ print_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
-# Function to check if a command exists
+# コマンドが存在するか確認する関数
 command_exists() {
     command -v "$1" >/dev/null 2>&1
 }
 
-# Function to check if a port is in use
+# ポートが使用中か確認する関数
 port_in_use() {
     lsof -i ":$1" >/dev/null 2>&1
 }
 
-# Function to kill processes on a port
+# ポート上のプロセスを終了する関数
 kill_port() {
     if port_in_use $1; then
-        print_warning "Port $1 is in use. Killing existing processes..."
+        print_warning "ポート $1 が使用中です。既存のプロセスを終了しています..."
         lsof -ti ":$1" | xargs kill -9 2>/dev/null || true
         sleep 2
     fi
 }
 
-print_status "Starting Project Omega..."
+print_status "Project Omegaを起動しています..."
 
-# Check prerequisites
-print_status "Checking prerequisites..."
+# 前提条件を確認
+print_status "前提条件を確認しています..."
 
 if ! command_exists node; then
-    print_error "Node.js is not installed. Please install Node.js first."
+    print_error "Node.jsがインストールされていません。先にNode.jsをインストールしてください。"
     exit 1
 fi
 
 if ! command_exists npm; then
-    print_error "npm is not installed. Please install npm first."
+    print_error "npmがインストールされていません。先にnpmをインストールしてください。"
     exit 1
 fi
 
-# Check Node.js version
+# Node.jsバージョンを確認
 NODE_VERSION=$(node -v | cut -d'v' -f2)
 REQUIRED_VERSION="18.0.0"
 if ! node -e "process.exit(require('semver').gte('$NODE_VERSION', '$REQUIRED_VERSION'))" 2>/dev/null; then
-    print_warning "Node.js version $NODE_VERSION detected. Recommended: $REQUIRED_VERSION or higher"
+    print_warning "Node.jsバージョン $NODE_VERSION が検出されました。推奨: $REQUIRED_VERSION 以上"
 fi
 
-print_success "Prerequisites check completed"
+print_success "前提条件の確認が完了しました"
 
-# Get the script directory
+# スクリプトディレクトリを取得
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
-# Check environment variables
-print_status "Checking environment variables..."
+# 環境変数を確認
+print_status "環境変数を確認しています..."
 
 ENV_FILE="web/.env.local"
 if [ ! -f "$ENV_FILE" ]; then
-    print_error "Environment file $ENV_FILE not found!"
-    print_status "Please create $ENV_FILE with the following variables:"
+    print_error "環境ファイル $ENV_FILE が見つかりません！"
+    print_status "以下の変数を含む $ENV_FILE を作成してください:"
     echo "ANTHROPIC_API_KEY=your_anthropic_key"
     echo "OPENAI_API_KEY=your_openai_key"
     echo "NOTION_TOKEN=your_notion_token"
@@ -94,7 +94,7 @@ if [ ! -f "$ENV_FILE" ]; then
     exit 1
 fi
 
-# Source environment variables to check them
+# 環境変数を確認するために読み込み
 set -a
 source "$ENV_FILE"
 set +a
@@ -107,65 +107,65 @@ missing_vars=()
 [ -z "$EXA_API_KEY" ] && missing_vars+=("EXA_API_KEY")
 
 if [ ${#missing_vars[@]} -ne 0 ]; then
-    print_error "Missing required environment variables: ${missing_vars[*]}"
+    print_error "必須環境変数が不足しています: ${missing_vars[*]}"
     exit 1
 fi
 
-print_success "Environment variables check completed"
+print_success "環境変数の確認が完了しました"
 
-# Clean up any existing processes
-print_status "Cleaning up existing processes..."
-kill_port 3000  # Next.js dev server
+# 既存のプロセスをクリーンアップ
+print_status "既存のプロセスをクリーンアップしています..."
+kill_port 3000  # Next.js開発サーバー
 
-# Build MCP servers if needed
-print_status "Building MCP servers..."
+# 必要に応じてMCPサーバーをビルド
+print_status "MCPサーバーをビルドしています..."
 
-# Build Notion MCP server
+# Notion MCPサーバーをビルド
 if [ -d "mcp-servers/notion" ]; then
-    print_status "Building Notion MCP server..."
+    print_status "Notion MCPサーバーをビルドしています..."
     cd mcp-servers/notion
-    print_status "Installing/updating Notion MCP server dependencies..."
+    print_status "Notion MCPサーバーの依存関係をインストール/更新しています..."
     npm install
     npm run build
     cd "$SCRIPT_DIR"
-    print_success "Notion MCP server built"
+    print_success "Notion MCPサーバーのビルドが完了しました"
 else
-    print_warning "Notion MCP server directory not found"
+    print_warning "Notion MCPサーバーディレクトリが見つかりません"
 fi
 
-# Build Slack MCP server
+# Slack MCPサーバーをビルド
 if [ -d "mcp-servers/slack" ]; then
-    print_status "Building Slack MCP server..."
+    print_status "Slack MCPサーバーをビルドしています..."
     cd mcp-servers/slack
-    print_status "Installing/updating Slack MCP server dependencies..."
+    print_status "Slack MCPサーバーの依存関係をインストール/更新しています..."
     npm install
     npm run build
     cd "$SCRIPT_DIR"
-    print_success "Slack MCP server built"
+    print_success "Slack MCPサーバーのビルドが完了しました"
 else
-    print_warning "Slack MCP server directory not found"
+    print_warning "Slack MCPサーバーディレクトリが見つかりません"
 fi
 
-# Install and start web application
-print_status "Setting up web application..."
+# Webアプリケーションをインストールして起動
+print_status "Webアプリケーションをセットアップしています..."
 cd web
 
-print_status "Installing/updating web application dependencies..."
+print_status "Webアプリケーションの依存関係をインストール/更新しています..."
 npm install
 
-# Run linting
-print_status "Running code quality checks..."
+# リントを実行
+print_status "コード品質チェックを実行しています..."
 npm run lint
 
-print_success "All components built and validated"
+print_success "すべてのコンポーネントのビルドと検証が完了しました"
 
-# Start the development server
-print_status "Starting development server on http://localhost:3000..."
-print_status "Press Ctrl+C to stop the server"
+# 開発サーバーを起動
+print_status "開発サーバーを http://localhost:3000 で起動しています..."
+print_status "サーバーを停止するには Ctrl+C を押してください"
 print_status ""
-print_success "🚀 Project Omega is starting up!"
-print_status "Dashboard will be available at: ${BLUE}http://localhost:3000${NC}"
+print_success "🚀 Project Omega が起動しています！"
+print_status "ダッシュボードはこちらで利用可能です: ${BLUE}http://localhost:3000${NC}"
 print_status ""
 
-# Start Next.js development server
+# Next.js開発サーバーを起動
 exec npm run dev
