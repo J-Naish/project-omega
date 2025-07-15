@@ -61,7 +61,7 @@ export async function POST(req: Request) {
     console.log('[MCP] Processing request with messages:', messages.length);
 
     const result = streamText({
-      model: anthropic("claude-3-7-sonnet-20250219"),
+      model: anthropic("claude-3-5-sonnet-latest"),
       messages,
       system: systemPrompt,
       tools,
