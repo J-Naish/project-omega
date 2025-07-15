@@ -124,10 +124,8 @@ print_status "Building MCP servers..."
 if [ -d "mcp-servers/notion" ]; then
     print_status "Building Notion MCP server..."
     cd mcp-servers/notion
-    if [ ! -d "node_modules" ]; then
-        print_status "Installing Notion MCP server dependencies..."
-        npm install
-    fi
+    print_status "Installing/updating Notion MCP server dependencies..."
+    npm install
     npm run build
     cd "$SCRIPT_DIR"
     print_success "Notion MCP server built"
@@ -139,10 +137,8 @@ fi
 if [ -d "mcp-servers/slack" ]; then
     print_status "Building Slack MCP server..."
     cd mcp-servers/slack
-    if [ ! -d "node_modules" ]; then
-        print_status "Installing Slack MCP server dependencies..."
-        npm install
-    fi
+    print_status "Installing/updating Slack MCP server dependencies..."
+    npm install
     npm run build
     cd "$SCRIPT_DIR"
     print_success "Slack MCP server built"
@@ -154,10 +150,8 @@ fi
 print_status "Setting up web application..."
 cd web
 
-if [ ! -d "node_modules" ]; then
-    print_status "Installing web application dependencies..."
-    npm install
-fi
+print_status "Installing/updating web application dependencies..."
+npm install
 
 # Run linting
 print_status "Running code quality checks..."
