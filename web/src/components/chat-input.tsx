@@ -14,7 +14,7 @@ interface ChatInputProps {
 
 export function ChatInput({ input, setInput, onSend, onFileAttach, isLoading = false }: ChatInputProps) {
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey && !isLoading) {
+    if (e.key === "Enter" && (e.metaKey || e.ctrlKey) && !isLoading) {
       e.preventDefault();
       onSend(e as React.FormEvent);
     }
