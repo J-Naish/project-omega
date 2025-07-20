@@ -15,6 +15,7 @@ import path from "path";
 import { fileURLToPath } from 'url';
 
 const drive = google.drive("v3");
+const sheets = google.sheets("v4");
 
 const server = new Server(
   {
@@ -144,6 +145,80 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           required: ["query"],
         },
       },
+      {
+        name: "sheets_read",
+        description: "Read data from a Google Sheets spreadsheet",
+        inputSchema: {
+          type: "object",
+          properties: {
+            spreadsheetId: {
+              type: "string",
+              description: "The ID of the Google Sheets spreadsheet",
+            },
+            range: {
+              type: "string",
+              description: "The range to read (e.g., 'Sheet1!A1:D10' or 'Sheet1' for entire sheet)",
+            },
+          },
+          required: ["spreadsheetId", "range"],
+        },
+      },
+      {
+        name: "sheets_write",
+        description: "Write data to a Google Sheets spreadsheet",
+        inputSchema: {
+          type: "object",
+          properties: {
+            spreadsheetId: {
+              type: "string",
+              description: "The ID of the Google Sheets spreadsheet",
+            },
+            range: {
+              type: "string",
+              description: "The range to write to (e.g., 'Sheet1!A1:D10')",
+            },
+            values: {
+              type: "array",
+              description: "2D array of values to write",
+              items: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          required: ["spreadsheetId", "range", "values"],
+        },
+      },
+      {
+        name: "sheets_append",
+        description: "Append data to a Google Sheets spreadsheet",
+        inputSchema: {
+          type: "object",
+          properties: {
+            spreadsheetId: {
+              type: "string",
+              description: "The ID of the Google Sheets spreadsheet",
+            },
+            range: {
+              type: "string",
+              description: "The range to append to (e.g., 'Sheet1!A:A')",
+            },
+            values: {
+              type: "array",
+              description: "2D array of values to append",
+              items: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          required: ["spreadsheetId", "range", "values"],
+        },
+      },
     ],
   };
 });
@@ -161,7 +236,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     });
 
     const fileList = res.data.files
-      ?.map((file: any) => `${file.name} (${file.mimeType})`)
+      ?.map((file: any) => `${file.name} (${file.mimeType}) - ID: ${file.id}`)
       .join("\n");
     return {
       content: [
@@ -173,6 +248,137 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       isError: false,
     };
   }
+
+  if (request.params.name === "sheets_read") {
+    const { spreadsheetId, range } = request.params.arguments as {
+      spreadsheetId: string;
+      range: string;
+    };
+
+    try {
+      const response = await sheets.spreadsheets.values.get({
+        spreadsheetId,
+        range,
+      });
+
+      const values = response.data.values;
+      if (!values || values.length === 0) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: "No data found in the specified range.",
+            },
+          ],
+          isError: false,
+        };
+      }
+
+      // Format the data as a table
+      const tableData = values.map((row, index) => {
+        return `Row ${index + 1}: ${row.join(" | ")}`;
+      }).join("\n");
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Data from ${range}:\n${tableData}`,
+          },
+        ],
+        isError: false,
+      };
+    } catch (error) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error reading spreadsheet: ${error}`,
+          },
+        ],
+        isError: true,
+      };
+    }
+  }
+
+  if (request.params.name === "sheets_write") {
+    const { spreadsheetId, range, values } = request.params.arguments as {
+      spreadsheetId: string;
+      range: string;
+      values: string[][];
+    };
+
+    try {
+      const response = await sheets.spreadsheets.values.update({
+        spreadsheetId,
+        range,
+        valueInputOption: "USER_ENTERED",
+        requestBody: {
+          values,
+        },
+      });
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Successfully updated ${response.data.updatedCells} cells in range ${range}`,
+          },
+        ],
+        isError: false,
+      };
+    } catch (error) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error writing to spreadsheet: ${error}`,
+          },
+        ],
+        isError: true,
+      };
+    }
+  }
+
+  if (request.params.name === "sheets_append") {
+    const { spreadsheetId, range, values } = request.params.arguments as {
+      spreadsheetId: string;
+      range: string;
+      values: string[][];
+    };
+
+    try {
+      const response = await sheets.spreadsheets.values.append({
+        spreadsheetId,
+        range,
+        valueInputOption: "USER_ENTERED",
+        requestBody: {
+          values,
+        },
+      });
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Successfully appended data to ${range}. Updated range: ${response.data.updates?.updatedRange}`,
+          },
+        ],
+        isError: false,
+      };
+    } catch (error) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error appending to spreadsheet: ${error}`,
+          },
+        ],
+        isError: true,
+      };
+    }
+  }
+
   throw new Error("Tool not found");
 });
 
@@ -188,7 +394,10 @@ async function authenticateAndSaveCredentials() {
       path.dirname(fileURLToPath(import.meta.url)),
       "../gcp-oauth.keys.json",
     ),
-    scopes: ["https://www.googleapis.com/auth/drive.readonly"],
+    scopes: [
+      "https://www.googleapis.com/auth/drive.readonly",
+      "https://www.googleapis.com/auth/spreadsheets",
+    ],
   });
   fs.writeFileSync(credentialsPath, JSON.stringify(auth.credentials));
   console.log("Credentials saved. You can now run the server.");

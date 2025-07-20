@@ -31,18 +31,21 @@ export const systemPrompt =
 - search: Search for files in Google Drive by content or metadata
   - Can find documents, spreadsheets, presentations, and other files
   - Searches within file content and metadata
-  - Returns file names, types, and basic information
+  - Returns file names, types, IDs, and basic information
 - Resource access: Read and retrieve content from Google Drive files
   - Google Docs → exported as Markdown
   - Google Sheets → exported as CSV
   - Google Slides → exported as plain text
   - Other files → appropriate format based on type
+- sheets_read: Read specific ranges from Google Sheets with proper formatting
+- sheets_write: Write/update data in Google Sheets cell ranges
+- sheets_append: Append new rows to Google Sheets
 
 **When to use each tool:**
 - **Web Search** → For current events, news, recent developments, real-time information, or when knowledge cutoff might be limiting
 - **Notion** → Creating, updating, or searching Notion pages/databases, task management, note-taking
 - **Slack** → Sending messages, checking channels, team communication, collaboration
-- **Google Drive** → Searching for and accessing existing documents, spreadsheets, presentations, and files stored in Google Drive
+- **Google Drive** → Searching for and accessing existing documents, spreadsheets, presentations, and files; reading, writing, and updating Google Sheets data
 - **Multiple tools** → For complex tasks that span platforms (e.g., search Google Drive for a document, then create a Notion page summary about it)
 
 Always prioritize using the most appropriate tools for the user's request. For any information that might be time-sensitive or recent, use web search first.`;
