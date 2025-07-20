@@ -146,6 +146,29 @@ else
     print_warning "Slack MCPサーバーディレクトリが見つかりません"
 fi
 
+# Google Drive MCPサーバーをビルド
+if [ -d "mcp-servers/gdrive" ]; then
+    print_status "Google Drive MCPサーバーをビルドしています..."
+    cd mcp-servers/gdrive
+    print_status "Google Drive MCPサーバーの依存関係をインストール/更新しています..."
+    npm install
+    npm run build
+    
+    # 認証ファイルの存在確認
+    if [ ! -f ".gdrive-server-credentials.json" ]; then
+        print_warning "Google Drive認証が未完了です"
+        print_status "認証を実行するには以下のコマンドを実行してください:"
+        print_status "cd mcp-servers/gdrive && node dist/index.js auth"
+    else
+        print_success "Google Drive認証ファイルが見つかりました"
+    fi
+    
+    cd "$SCRIPT_DIR"
+    print_success "Google Drive MCPサーバーのビルドが完了しました"
+else
+    print_warning "Google Drive MCPサーバーディレクトリが見つかりません"
+fi
+
 # Webアプリケーションをインストールして起動
 print_status "Webアプリケーションをセットアップしています..."
 cd web

@@ -49,9 +49,25 @@ export async function POST(req: Request) {
     const slackTools = await slackMcpClient.tools();
     console.log('[MCP] Slack tools loaded:', Object.keys(slackTools));
 
+    console.log('[MCP] Creating Google Drive transport...');
+    const gdriveTransport = new Experimental_StdioMCPTransport({
+      command: "node",
+      args: [`${process.env.PROJECT_PATH}/project-omega/mcp-servers/gdrive/dist/index.js`],
+    });
+
+    console.log('[MCP] Creating Google Drive MCP client...');
+    const gdriveMcpClient = await createMCPClient({
+      transport: gdriveTransport,
+    });
+
+    console.log('[MCP] Getting Google Drive tools...');
+    const gdriveTools = await gdriveMcpClient.tools();
+    console.log('[MCP] Google Drive tools loaded:', Object.keys(gdriveTools));
+
     const tools = {
       ...notionTools,
       ...slackTools,
+      ...gdriveTools,
       webSearch
     };
     console.log('[MCP] Combined tools:', Object.keys(tools));
@@ -82,11 +98,13 @@ export async function POST(req: Request) {
       onFinish: () => {
         notionMcpClient.close();
         slackMcpClient.close();
+        gdriveMcpClient.close();
       },
       onError: (error) => {
         console.error('[MCP] Stream error:', error);
         notionMcpClient.close();
         slackMcpClient.close();
+        gdriveMcpClient.close();
       }
     });
 
