@@ -96,7 +96,7 @@ if [ -d "mcp-servers/gdrive" ]; then
     print_status "Google Drive MCPサーバーの依存関係をインストール/更新しています..."
     npm install
     npm run build
-    
+    npm run auth
     # 認証ファイルの存在確認
     if [ ! -f ".gdrive-server-credentials.json" ]; then
         print_warning "Google Drive認証が未完了です"
