@@ -8,16 +8,11 @@ import { webSearch } from "../tools/web-search";
 
 const router = Router();
 
-// Simple test endpoint
-router.get('/test', (req: Request, res: Response) => {
-  res.json({ message: 'Chat API is working', timestamp: new Date().toISOString() });
-});
-
 router.post('/', async (req: Request, res: Response) => {
-  console.log('Starting API route...');
-  console.log('Request received:', req.method, req.url);
-  console.log('Request headers:', req.headers);
-  console.log('Request body keys:', Object.keys(req.body || {}));
+  console.log('チャットAPIが呼ばれました');
+  console.log('リクエスト概要:', req.method, req.url);
+  console.log('リクエストヘッダー:', req.headers);
+  console.log('リクエストボディのキー:', Object.keys(req.body || {}));
 
   try {
     // console.log('Creating Notion transport...');
@@ -75,66 +70,56 @@ router.post('/', async (req: Request, res: Response) => {
     // const gdriveTools = await gdriveMcpClient.tools();
     // console.log('Google Drive tools loaded:', Object.keys(gdriveTools));
 
-    const tools = {
-      // ...notionTools,
-      // ...slackTools,
-      // ...gdriveTools,
-      webSearch
-    };
-    console.log('Combined tools:', Object.keys(tools));
+    // const tools = {
+    //   // ...notionTools,
+    //   // ...slackTools,
+    //   // ...gdriveTools,
+    //   webSearch
+    // };
+    // console.log('Combined tools:', Object.keys(tools));
 
     const { messages } = req.body;
-    console.log('Processing request with messages:', messages?.length || 0);
-
-    // Check if we have messages
-    if (!messages || !Array.isArray(messages)) {
-      return res.status(400).json({ error: 'Messages array is required' });
-    }
-
-    // Check if Anthropic API key is available
-    if (!process.env.ANTHROPIC_API_KEY) {
-      console.log(process.env.ANTHROPIC_API_KEY);
-      return res.status(500).json({ error: 'ANTHROPIC_API_KEY environment variable is not set' });
-    }
+    console.log("メッセージ", messages);
 
     const result = streamText({
       model: anthropic("claude-3-5-sonnet-latest"),
       messages,
       system: systemPrompt,
-      tools,
+      // tools,
       maxSteps: 5,
       toolCallStreaming: true,
       onChunk: ({ chunk }) => {
-        if (chunk.type === 'tool-call') {
-          console.log(`Calling tool: ${chunk.toolName}`);
-        } else if (chunk.type === 'tool-result') {
-          console.log(`Tool result received for: ${chunk.toolCallId}`);
-        }
+        // if (chunk.type === 'tool-call') {
+        //   console.log(`Calling tool: ${chunk.toolName}`);
+        // }
+        // else if (chunk.type === 'tool-result') {
+        //   console.log(`Tool result received for: ${chunk.toolCallId}`);
+        // }
       },
-      onStepFinish: ({ toolCalls }) => {
-        if (toolCalls && toolCalls.length > 0) {
-          console.log(`Step completed with ${toolCalls.length} tool calls`);
-        }
-      },
+      // onStepFinish: ({ toolCalls }) => {
+      //   if (toolCalls && toolCalls.length > 0) {
+      //     console.log(`Step completed with ${toolCalls.length} tool calls`);
+      //   }
+      // },
       onFinish: () => {
-        console.log('Stream finished');
+        console.log('ストリーム終了');
         // notionMcpClient.close();
         // slackMcpClient.close();
         // gdriveMcpClient.close();
       },
       onError: (error) => {
-        console.error('Stream error:', error);
+        console.error('ストリームエラー:', error);
         // notionMcpClient.close();
         // slackMcpClient.close();
         // gdriveMcpClient.close();
       }
     });
 
-    console.log('Piping stream to response...');
+    console.log('ストリームを送信');
     result.pipeDataStreamToResponse(res);
   } catch (error) {
-    console.error('API route error:', error);
-    return res.status(500).json({ error: 'Internal server error' });
+    console.error('チャットAPIエラー:', error);
+    return res.status(500).json({ error: 'サーバーエラー' });
   }
 });
 
