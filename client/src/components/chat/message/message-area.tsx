@@ -5,11 +5,7 @@ import { useEffect, useRef } from "react";
 import UserMessage from "./user-message";
 import AssistantMessage from "./assistant-message";
 
-interface MessageAreaProps {
-  messages: Message[];
-}
-
-export function MessageArea({ messages }: MessageAreaProps) {
+export function MessageArea({ messages }: { messages: Message[] }) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
