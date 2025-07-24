@@ -22,14 +22,6 @@ export function ChatInput({ input, setInput, onSend, onFileAttach, isLoading = f
 
   return (
     <div className="mb-4">
-      {isLoading && (
-        <div className="mb-2 p-2 bg-blue-50 border border-blue-200 rounded-lg">
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-            <span className="text-sm text-blue-700">AI is processing (may use MCP tools)...</span>
-          </div>
-        </div>
-      )}
       <div className="relative">
         <Textarea
           value={input}
