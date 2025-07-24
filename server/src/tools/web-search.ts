@@ -2,7 +2,7 @@ import { tool } from "ai";
 import { z } from "zod";
 import Exa from "exa-js";
 
-export const exa = process.env.EXA_API_KEY ? new Exa(process.env.EXA_API_KEY) : null;
+const exa = process.env.EXA_API_KEY ? new Exa(process.env.EXA_API_KEY) : null;
 
 export const webSearch = tool({
   description: "Search the web for up-to-date information",
@@ -25,3 +25,13 @@ export const webSearch = tool({
     }));
   }
 });
+
+export const toolDescription =
+`**Web Search Tool** (for current information):
+- webSearch: Search the web for up-to-date information using live crawling
+- Use for: current events, recent news, latest information, real-time data
+- Returns: title, URL, content excerpt, and published date
+- Always use when users ask for current/recent information or when your knowledge might be outdated`;
+
+export const toolUsage =
+`- **Web Search** → For current events, news, recent developments, real-time information, or when knowledge cutoff might be limiting`;
