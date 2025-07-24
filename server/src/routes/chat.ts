@@ -117,6 +117,7 @@ router.post("/", async (req: Request, res: Response) => {
       },
       onError: error => {
         console.error("ストリームエラー:", error);
+        throw error;
         // notionMcpClient.close();
         // slackMcpClient.close();
         // gdriveMcpClient.close();
@@ -127,7 +128,7 @@ router.post("/", async (req: Request, res: Response) => {
     result.pipeDataStreamToResponse(res);
   } catch (error) {
     console.error("チャットAPIエラー:", error);
-    return res.status(500).json({ error: "サーバーエラー" });
+    return res.status(500).json({ message: "サーバーエラー", error: error });
   }
 });
 
