@@ -118,7 +118,7 @@ function AIInputTextarea({ onChange, ...props }: React.ComponentProps<typeof Tex
   return (
     <Textarea
       className={cn(
-        `w-full resize-none rounded-none border-none p-4 shadow-none outline-none ring-0`,
+        "w-full resize-none rounded-none border-none p-4 shadow-none outline-none ring-0",
         "bg-transparent dark:bg-transparent",
         "focus-visible:ring-0"
       )}
