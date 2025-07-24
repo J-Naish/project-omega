@@ -20,7 +20,7 @@ router.post('/', async (req: Request, res: Response) => {
   console.log('Request body keys:', Object.keys(req.body || {}));
 
   try {
-    // console.log('[MCP] Creating Notion transport...');
+    // console.log('Creating Notion transport...');
     // const notionTransport = new Experimental_StdioMCPTransport({
     //   command: "node",
     //   args: [`${process.env.PROJECT_PATH}/project-omega/mcp-servers/notion/bin/cli.mjs`],
@@ -32,16 +32,16 @@ router.post('/', async (req: Request, res: Response) => {
     //   }
     // });
 
-    // console.log('[MCP] Creating Notion MCP client...');
+    // console.log('Creating Notion MCP client...');
     // const notionMcpClient = await createMCPClient({
     //   transport: notionTransport,
     // });
 
-    // console.log('[MCP] Getting Notion tools...');
+    // console.log('Getting Notion tools...');
     // const notionTools = await notionMcpClient.tools();
-    // console.log('[MCP] Notion tools loaded:', Object.keys(notionTools));
+    // console.log('Notion tools loaded:', Object.keys(notionTools));
 
-    // console.log('[MCP] Creating Slack transport...');
+    // console.log('Creating Slack transport...');
     // const slackTransport = new Experimental_StdioMCPTransport({
     //   command: "node",
     //     args: [`${process.env.PROJECT_PATH}/project-omega/mcp-servers/slack/dist/index.js`],
@@ -51,29 +51,29 @@ router.post('/', async (req: Request, res: Response) => {
     //     }
     // });
 
-    // console.log('[MCP] Creating Slack MCP client...');
+    // console.log('Creating Slack MCP client...');
     // const slackMcpClient = await createMCPClient({
     //   transport: slackTransport,
     // });
 
-    // console.log('[MCP] Getting Slack tools...');
+    // console.log('Getting Slack tools...');
     // const slackTools = await slackMcpClient.tools();
-    // console.log('[MCP] Slack tools loaded:', Object.keys(slackTools));
+    // console.log('Slack tools loaded:', Object.keys(slackTools));
 
-    // console.log('[MCP] Creating Google Drive transport...');
+    // console.log('Creating Google Drive transport...');
     // const gdriveTransport = new Experimental_StdioMCPTransport({
     //   command: "node",
     //   args: [`${process.env.PROJECT_PATH}/project-omega/mcp-servers/gdrive/dist/index.js`],
     // });
 
-    // console.log('[MCP] Creating Google Drive MCP client...');
+    // console.log('Creating Google Drive MCP client...');
     // const gdriveMcpClient = await createMCPClient({
     //   transport: gdriveTransport,
     // });
 
-    // console.log('[MCP] Getting Google Drive tools...');
+    // console.log('Getting Google Drive tools...');
     // const gdriveTools = await gdriveMcpClient.tools();
-    // console.log('[MCP] Google Drive tools loaded:', Object.keys(gdriveTools));
+    // console.log('Google Drive tools loaded:', Object.keys(gdriveTools));
 
     const tools = {
       // ...notionTools,
@@ -81,10 +81,10 @@ router.post('/', async (req: Request, res: Response) => {
       // ...gdriveTools,
       webSearch
     };
-    console.log('[MCP] Combined tools:', Object.keys(tools));
+    console.log('Combined tools:', Object.keys(tools));
 
     const { messages } = req.body;
-    console.log('[MCP] Processing request with messages:', messages?.length || 0);
+    console.log('Processing request with messages:', messages?.length || 0);
 
     // Check if we have messages
     if (!messages || !Array.isArray(messages)) {
@@ -106,34 +106,34 @@ router.post('/', async (req: Request, res: Response) => {
       toolCallStreaming: true,
       onChunk: ({ chunk }) => {
         if (chunk.type === 'tool-call') {
-          console.log(`[MCP] Calling tool: ${chunk.toolName}`);
+          console.log(`Calling tool: ${chunk.toolName}`);
         } else if (chunk.type === 'tool-result') {
-          console.log(`[MCP] Tool result received for: ${chunk.toolCallId}`);
+          console.log(`Tool result received for: ${chunk.toolCallId}`);
         }
       },
       onStepFinish: ({ toolCalls }) => {
         if (toolCalls && toolCalls.length > 0) {
-          console.log(`[MCP] Step completed with ${toolCalls.length} tool calls`);
+          console.log(`Step completed with ${toolCalls.length} tool calls`);
         }
       },
       onFinish: () => {
-        console.log('[MCP] Stream finished');
+        console.log('Stream finished');
         // notionMcpClient.close();
         // slackMcpClient.close();
         // gdriveMcpClient.close();
       },
       onError: (error) => {
-        console.error('[MCP] Stream error:', error);
+        console.error('Stream error:', error);
         // notionMcpClient.close();
         // slackMcpClient.close();
         // gdriveMcpClient.close();
       }
     });
 
-    console.log('[MCP] Piping stream to response...');
+    console.log('Piping stream to response...');
     result.pipeDataStreamToResponse(res);
   } catch (error) {
-    console.error('[MCP] API route error:', error);
+    console.error('API route error:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 });
