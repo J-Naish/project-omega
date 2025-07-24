@@ -14,11 +14,12 @@ export default function ChatInterface() {
   };
 
   const isLoading = status === "submitted" || status === "streaming";
+  const isWaitingForResponse = status === "submitted";
 
   return (
     <div className="relative h-screen max-w-4xl px-4 mx-auto">
       <div className="h-full pb-32 overflow-hidden">
-        <MessageArea messages={messages} />
+        <MessageArea messages={messages} isWaitingForResponse={isWaitingForResponse} />
       </div>
       <div className="fixed bottom-0 left-0 right-0 bg-background">
         <div className="max-w-4xl px-4 mx-auto">
