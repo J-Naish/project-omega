@@ -19,12 +19,10 @@ export function MessageArea({ messages }: { messages: Message[] }) {
 
   return (
     <div ref={containerRef} className="h-full overflow-y-auto p-4 space-y-8">
-      {messages.map((message) => (
+      {messages.map(message => (
         <div
           key={message.id}
-          className={`flex ${
-            message.role === "user" ? "justify-end" : "justify-start"
-          }`}
+          className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
         >
           {message.role === "user" && <UserMessage message={message} />}
           {message.role === "assistant" && <AssistantMessage message={message} />}

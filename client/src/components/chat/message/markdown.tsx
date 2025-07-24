@@ -14,7 +14,11 @@ export default function Markdown({ children }: { children: string | null | undef
         h6: ({ children }) => <H6>{children}</H6>,
         p: ({ children }) => <P>{children}</P>,
         pre: ({ children }) => <Pre>{children}</Pre>,
-        code: ({ className, children, ...props }) => <Code className={className} {...props}>{children}</Code>,
+        code: ({ className, children, ...props }) => (
+          <Code className={className} {...props}>
+            {children}
+          </Code>
+        ),
         a: ({ href, children }) => <A href={href}>{children}</A>,
         ul: ({ children }) => <Ul>{children}</Ul>,
         ol: ({ children }) => <Ol>{children}</Ol>,
@@ -31,59 +35,31 @@ export default function Markdown({ children }: { children: string | null | undef
 }
 
 function H1({ children }: { children: React.ReactNode }) {
-  return (
-    <h1 className="text-2xl font-bold mb-4 mt-6">
-      {children}
-    </h1>
-  );
+  return <h1 className="text-2xl font-bold mb-4 mt-6">{children}</h1>;
 }
 
 function H2({ children }: { children: React.ReactNode }) {
-  return (
-    <h2 className="text-xl font-semibold mb-3 mt-5">
-      {children}
-    </h2>
-  );
+  return <h2 className="text-xl font-semibold mb-3 mt-5">{children}</h2>;
 }
 
 function H3({ children }: { children: React.ReactNode }) {
-  return (
-    <h3 className="text-lg font-semibold mb-2 mt-4">
-      {children}
-    </h3>
-  );
+  return <h3 className="text-lg font-semibold mb-2 mt-4">{children}</h3>;
 }
 
 function H4({ children }: { children: React.ReactNode }) {
-  return (
-    <h4 className="text-base font-semibold mb-2 mt-3">
-      {children}
-    </h4>
-  );
+  return <h4 className="text-base font-semibold mb-2 mt-3">{children}</h4>;
 }
 
 function H5({ children }: { children: React.ReactNode }) {
-  return (
-    <h5 className="text-sm font-semibold mb-1 mt-2">
-      {children}
-    </h5>
-  );
+  return <h5 className="text-sm font-semibold mb-1 mt-2">{children}</h5>;
 }
 
 function H6({ children }: { children: React.ReactNode }) {
-  return (
-    <h6 className="text-sm font-semibold mb-1 mt-2">
-      {children}
-    </h6>
-  );
+  return <h6 className="text-sm font-semibold mb-1 mt-2">{children}</h6>;
 }
 
 function P({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="mb-4">
-      {children}
-    </p>
-  );
+  return <p className="mb-4">{children}</p>;
 }
 
 function Pre({ children }: { children: React.ReactNode }) {
@@ -94,11 +70,22 @@ function Pre({ children }: { children: React.ReactNode }) {
   );
 }
 
-function Code({ className, children, ...props }: { className?: string; children: React.ReactNode; [key: string]: unknown }) {
-  const match = /language-(\w+)/.exec(className || '');
+function Code({
+  className,
+  children,
+  ...props
+}: {
+  className?: string;
+  children: React.ReactNode;
+  [key: string]: unknown;
+}) {
+  const match = /language-(\w+)/.exec(className || "");
   const isInline = !match;
   return isInline ? (
-    <code className="bg-gray-200 dark:bg-gray-800 px-1.5 py-0.5 rounded text-sm font-mono text-gray-900 dark:text-gray-100" {...props}>
+    <code
+      className="bg-gray-200 dark:bg-gray-800 px-1.5 py-0.5 rounded text-sm font-mono text-gray-900 dark:text-gray-100"
+      {...props}
+    >
       {children}
     </code>
   ) : (
@@ -110,34 +97,27 @@ function Code({ className, children, ...props }: { className?: string; children:
 
 function A({ href, children }: { href?: string; children: React.ReactNode }) {
   return (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 underline">
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-blue-600 hover:text-blue-800 underline"
+    >
       {children}
     </a>
   );
 }
 
 function Ul({ children }: { children: React.ReactNode }) {
-  return (
-    <ul className="list-disc pl-6 space-y-1">
-      {children}
-    </ul>
-  );
+  return <ul className="list-disc pl-6 space-y-1">{children}</ul>;
 }
 
 function Ol({ children }: { children: React.ReactNode }) {
-  return (
-    <ol className="list-decimal pl-6 space-y-1">
-      {children}
-    </ol>
-  );
+  return <ol className="list-decimal pl-6 space-y-1">{children}</ol>;
 }
 
 function Li({ children }: { children: React.ReactNode }) {
-  return (
-    <li className="ml-2">
-      {children}
-    </li>
-  );
+  return <li className="ml-2">{children}</li>;
 }
 
 function Blockquote({ children }: { children: React.ReactNode }) {
@@ -151,9 +131,7 @@ function Blockquote({ children }: { children: React.ReactNode }) {
 function Table({ children }: { children: React.ReactNode }) {
   return (
     <div className="overflow-x-auto">
-      <table className="min-w-full divide-y divide-gray-300 dark:divide-gray-700">
-        {children}
-      </table>
+      <table className="min-w-full divide-y divide-gray-300 dark:divide-gray-700">{children}</table>
     </div>
   );
 }
@@ -167,9 +145,5 @@ function Th({ children }: { children: React.ReactNode }) {
 }
 
 function Td({ children }: { children: React.ReactNode }) {
-  return (
-    <td className="px-3 py-2 text-sm text-gray-700 dark:text-gray-300">
-      {children}
-    </td>
-  );
+  return <td className="px-3 py-2 text-sm text-gray-700 dark:text-gray-300">{children}</td>;
 }

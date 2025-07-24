@@ -14,7 +14,13 @@ interface ChatInputProps {
   isLoading?: boolean;
 }
 
-export default function ChatInput({ input, setInput, onSend, onFileAttach, isLoading = false }: ChatInputProps) {
+export default function ChatInput({
+  input,
+  setInput,
+  onSend,
+  onFileAttach,
+  isLoading = false,
+}: ChatInputProps) {
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && (e.metaKey || e.ctrlKey) && !isLoading) {
       e.preventDefault();
@@ -27,10 +33,20 @@ export default function ChatInput({ input, setInput, onSend, onFileAttach, isLoa
       <form className="w-full divide-y overflow-hidden rounded-xl border bg-background shadow-sm focus-within:border-gray-700 transition-colors">
         <AIInputTextarea value={input} onChange={setInput} onKeyDown={handleKeyDown} />
         <AIInputToolbar>
-          <Button variant="ghost" size="icon" onClick={onFileAttach} className="cursor-pointer border">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onFileAttach}
+            className="cursor-pointer border"
+          >
             <Paperclip />
           </Button>
-          <Button size="icon" onClick={(e) => onSend(e)} disabled={!input.trim() || isLoading} className="cursor-pointer">
+          <Button
+            size="icon"
+            onClick={e => onSend(e)}
+            disabled={!input.trim() || isLoading}
+            className="cursor-pointer"
+          >
             <Send />
           </Button>
         </AIInputToolbar>
@@ -60,10 +76,7 @@ const useAutoResizeTextarea = ({
       // Temporarily shrink to get the right scrollHeight
       textarea.style.height = `${minHeight}px`;
       // Calculate new height
-      const newHeight = Math.max(
-        minHeight,
-        Math.min(textarea.scrollHeight, maxHeight)
-      );
+      const newHeight = Math.max(minHeight, Math.min(textarea.scrollHeight, maxHeight));
       textarea.style.height = `${newHeight}px`;
     },
     [minHeight, maxHeight]
@@ -78,24 +91,20 @@ const useAutoResizeTextarea = ({
   // Adjust height on window resize
   useEffect(() => {
     const handleResize = () => adjustHeight();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, [adjustHeight]);
   return { textareaRef, adjustHeight };
 };
 
-
-function AIInputTextarea({
-  onChange,
-  ...props
-}: React.ComponentProps<typeof Textarea>) {
+function AIInputTextarea({ onChange, ...props }: React.ComponentProps<typeof Textarea>) {
   const { textareaRef, adjustHeight } = useAutoResizeTextarea({
     minHeight: 64,
-    maxHeight: 400
+    maxHeight: 400,
   });
 
-  const handleKeyDown: KeyboardEventHandler<HTMLTextAreaElement> = (e) => {
-    if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+  const handleKeyDown: KeyboardEventHandler<HTMLTextAreaElement> = e => {
+    if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
       e.preventDefault();
       const form = e.currentTarget.form;
       if (form) {
@@ -108,10 +117,10 @@ function AIInputTextarea({
     <Textarea
       className={cn(
         `w-full resize-none rounded-none border-none p-4 shadow-none outline-none ring-0`,
-        'bg-transparent dark:bg-transparent',
-        'focus-visible:ring-0',
+        "bg-transparent dark:bg-transparent",
+        "focus-visible:ring-0"
       )}
-      onChange={(e) => {
+      onChange={e => {
         adjustHeight();
         onChange?.(e);
       }}
@@ -121,16 +130,8 @@ function AIInputTextarea({
       {...props}
     />
   );
-};
+}
 
-function AIInputToolbar({
-  children
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="flex items-center justify-between px-4 py-4">
-      {children}
-    </div>
-  );
+function AIInputToolbar({ children }: { children: React.ReactNode }) {
+  return <div className="flex items-center justify-between px-4 py-4">{children}</div>;
 }

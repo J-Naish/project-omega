@@ -21,17 +21,15 @@ export const webSearch = tool({
       title: result.title,
       url: result.url,
       content: result.text.slice(0, 1000),
-      publishedDate: result.publishedDate
+      publishedDate: result.publishedDate,
     }));
-  }
+  },
 });
 
-export const webSearchDescription =
-`**Web Search Tool** (for current information):
+export const webSearchDescription = `**Web Search Tool** (for current information):
 - webSearch: Search the web for up-to-date information using live crawling
   - Use for: current events, recent news, latest information, real-time data
   - Returns: title, URL, content excerpt, and published date
   - Always use when users ask for current/recent information or when your knowledge might be outdated`;
 
-export const webSearchUsage =
-`- **Web Search** → For current events, news, recent developments, real-time information, or when knowledge cutoff might be limiting`;
+export const webSearchUsage = `- **Web Search** → For current events, news, recent developments, real-time information, or when knowledge cutoff might be limiting`;

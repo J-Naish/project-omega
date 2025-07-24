@@ -1,4 +1,4 @@
-import { Router, Request, Response } from 'express';
+import { Router, Request, Response } from "express";
 import { anthropic } from "@ai-sdk/anthropic";
 import { streamText } from "ai";
 // import { experimental_createMCPClient as createMCPClient } from "ai";
@@ -7,9 +7,7 @@ import { webSearch, webSearchDescription, webSearchUsage } from "../tools/web-se
 
 const router = Router();
 
-
-const systemPrompt =
-`You are a helpful productivity assistant. You have access to tools for managing tasks, communication, and web research:
+const systemPrompt = `You are a helpful productivity assistant. You have access to tools for managing tasks, communication, and web research:
 
 ${webSearchDescription}
 
@@ -19,12 +17,11 @@ ${webSearchUsage}
 Always prioritize using the most appropriate tools for the user's request. For any information that might be time-sensitive or recent, use web search first.
 `;
 
-
-router.post('/', async (req: Request, res: Response) => {
-  console.log('チャットAPIが呼ばれました');
-  console.log('リクエスト概要:', req.method, req.url);
-  console.log('リクエストヘッダー:', req.headers);
-  console.log('リクエストボディのキー:', Object.keys(req.body || {}));
+router.post("/", async (req: Request, res: Response) => {
+  console.log("チャットAPIが呼ばれました");
+  console.log("リクエスト概要:", req.method, req.url);
+  console.log("リクエストヘッダー:", req.headers);
+  console.log("リクエストボディのキー:", Object.keys(req.body || {}));
 
   try {
     // console.log('Creating Notion transport...');
@@ -86,9 +83,9 @@ router.post('/', async (req: Request, res: Response) => {
       // ...notionTools,
       // ...slackTools,
       // ...gdriveTools,
-      webSearch
+      webSearch,
     };
-    console.log('ツール一覧:', Object.keys(tools));
+    console.log("ツール一覧:", Object.keys(tools));
 
     const { messages } = req.body;
     console.log("メッセージ", messages[messages.length - 1]);
@@ -101,9 +98,9 @@ router.post('/', async (req: Request, res: Response) => {
       maxSteps: 5,
       toolCallStreaming: true,
       onChunk: ({ chunk }) => {
-        if (chunk.type === 'tool-call') {
+        if (chunk.type === "tool-call") {
           console.log(`ツール: ${chunk.toolName}`);
-        } else if (chunk.type === 'tool-result') {
+        } else if (chunk.type === "tool-result") {
           console.log(`ツールコールID: ${chunk.toolCallId}`);
         }
       },
@@ -113,24 +110,24 @@ router.post('/', async (req: Request, res: Response) => {
         }
       },
       onFinish: () => {
-        console.log('ストリーム終了');
+        console.log("ストリーム終了");
         // notionMcpClient.close();
         // slackMcpClient.close();
         // gdriveMcpClient.close();
       },
-      onError: (error) => {
-        console.error('ストリームエラー:', error);
+      onError: error => {
+        console.error("ストリームエラー:", error);
         // notionMcpClient.close();
         // slackMcpClient.close();
         // gdriveMcpClient.close();
-      }
+      },
     });
 
-    console.log('ストリームを送信');
+    console.log("ストリームを送信");
     result.pipeDataStreamToResponse(res);
   } catch (error) {
-    console.error('チャットAPIエラー:', error);
-    return res.status(500).json({ error: 'サーバーエラー' });
+    console.error("チャットAPIエラー:", error);
+    return res.status(500).json({ error: "サーバーエラー" });
   }
 });
 
