@@ -18,7 +18,7 @@ export function MessageArea({ messages }: { messages: Message[] }) {
   }, [messages]);
 
   return (
-    <div ref={containerRef} className="flex-1 overflow-y-auto p-4 space-y-4">
+    <div ref={containerRef} className="flex-1 overflow-y-auto p-4 space-y-8">
       {messages.length !== 0 && (
         messages.map((message) => (
           <div

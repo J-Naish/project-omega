@@ -1,8 +1,10 @@
 "use client";
 
+import { useRef, useCallback, useEffect, KeyboardEventHandler } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Send, Paperclip } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface ChatInputProps {
   input: string;
@@ -22,35 +24,113 @@ export default function ChatInput({ input, setInput, onSend, onFileAttach, isLoa
 
   return (
     <div className="mb-4 sticky">
-      <div className="relative">
-        <Textarea
-          value={input}
-          onChange={setInput}
-          onKeyDown={handleKeyDown}
-          placeholder="Type your message..."
-          className="min-h-[80px] max-h-[320px] resize-none pb-16 rounded-2xl px-4 pt-4"
-          rows={3}
-        />
-        <div className="absolute bottom-2 w-full flex justify-between px-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 cursor-pointer"
-            onClick={onFileAttach}
-            disabled={isLoading}
-          >
-            <Paperclip className="h-4 w-4" />
+      <form className="w-full divide-y overflow-hidden rounded-xl border bg-background shadow-sm">
+        <AIInputTextarea value={input} onChange={setInput} onKeyDown={handleKeyDown} />
+        <AIInputToolbar>
+          <Button variant="ghost" size="icon" onClick={onFileAttach} className="cursor-pointer border">
+            <Paperclip />
           </Button>
-          <Button
-            onClick={(e) => onSend(e)}
-            disabled={!input.trim() || isLoading}
-            size="icon"
-            className="h-8 w-8 cursor-pointer"
-          >
-            <Send className="h-4 w-4" />
+          <Button size="icon" onClick={(e) => onSend(e)} disabled={!input.trim() || isLoading} className="cursor-pointer">
+            <Send />
           </Button>
-        </div>
-      </div>
+        </AIInputToolbar>
+      </form>
+    </div>
+  );
+}
+
+const useAutoResizeTextarea = ({
+  minHeight,
+  maxHeight,
+}: {
+  minHeight: number;
+  maxHeight: number;
+}) => {
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const adjustHeight = useCallback(
+    (reset?: boolean) => {
+      const textarea = textareaRef.current;
+      if (!textarea) {
+        return;
+      }
+      if (reset) {
+        textarea.style.height = `${minHeight}px`;
+        return;
+      }
+      // Temporarily shrink to get the right scrollHeight
+      textarea.style.height = `${minHeight}px`;
+      // Calculate new height
+      const newHeight = Math.max(
+        minHeight,
+        Math.min(textarea.scrollHeight, maxHeight)
+      );
+      textarea.style.height = `${newHeight}px`;
+    },
+    [minHeight, maxHeight]
+  );
+  useEffect(() => {
+    // Set initial height
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = `${minHeight}px`;
+    }
+  }, [minHeight]);
+  // Adjust height on window resize
+  useEffect(() => {
+    const handleResize = () => adjustHeight();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [adjustHeight]);
+  return { textareaRef, adjustHeight };
+};
+
+
+function AIInputTextarea({
+  onChange,
+  ...props
+}: React.ComponentProps<typeof Textarea>) {
+  const { textareaRef, adjustHeight } = useAutoResizeTextarea({
+    minHeight: 64,
+    maxHeight: 400
+  });
+
+  const handleKeyDown: KeyboardEventHandler<HTMLTextAreaElement> = (e) => {
+    if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+      e.preventDefault();
+      const form = e.currentTarget.form;
+      if (form) {
+        form.requestSubmit();
+      }
+    }
+  };
+
+  return (
+    <Textarea
+      className={cn(
+        `w-full resize-none rounded-none border-none p-4 shadow-none outline-none ring-0`,
+        'bg-transparent dark:bg-transparent',
+        'focus-visible:ring-0',
+      )}
+      onChange={(e) => {
+        adjustHeight();
+        onChange?.(e);
+      }}
+      onKeyDown={handleKeyDown}
+      placeholder="Type your message..."
+      ref={textareaRef}
+      {...props}
+    />
+  );
+};
+
+function AIInputToolbar({
+  children
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex items-center justify-between px-4 py-4">
+      {children}
     </div>
   );
 }

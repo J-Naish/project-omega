@@ -16,7 +16,7 @@ export default function ChatInterface() {
   const isLoading = status === "submitted" || status === "streaming";
 
   return (
-    <div className="flex flex-col min-h-screen max-w-4xl mx-auto">
+    <div className="flex flex-col min-h-screen max-w-4xl px-4 mx-auto">
       <MessageArea messages={messages} />
       <ChatInput
         input={input}
