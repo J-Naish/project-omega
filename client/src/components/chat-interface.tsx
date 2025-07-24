@@ -5,7 +5,9 @@ import { MessageArea } from "@/components/message-area";
 import { ChatInput } from "@/components/chat-input";
 
 export function ChatInterface() {
-  const { messages, input, handleInputChange, handleSubmit, status } = useChat();
+  const { messages, input, handleInputChange, handleSubmit, status } = useChat({
+    api: 'http://localhost:8080/api/chat'
+  });
 
   const handleFileAttach = () => {
     console.log("File attachment clicked");

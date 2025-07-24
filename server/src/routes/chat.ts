@@ -1,11 +1,14 @@
+import { Router, Request, Response } from 'express';
 import { anthropic } from "@ai-sdk/anthropic";
 import { streamText } from "ai";
 import { experimental_createMCPClient as createMCPClient } from "ai";
-import { Experimental_StdioMCPTransport } from "ai/mcp-stdio";
-import { systemPrompt } from "./systemPrompt";
-import { webSearch } from "./web-search";
+import { Experimental_StdioMCPTransport } from "ai/mcp-stdio/dist/index.js";
+import { systemPrompt } from "../config/systemPrompt";
+import { webSearch } from "../tools/web-search";
 
-export async function POST(req: Request) {
+const router = Router();
+
+router.post('/', async (req: Request, res: Response) => {
   console.log('[MCP] Starting API route...');
 
   try {
@@ -72,8 +75,7 @@ export async function POST(req: Request) {
     };
     console.log('[MCP] Combined tools:', Object.keys(tools));
 
-
-    const { messages } = await req.json();
+    const { messages } = req.body;
     console.log('[MCP] Processing request with messages:', messages.length);
 
     const result = streamText({
@@ -111,9 +113,8 @@ export async function POST(req: Request) {
     return result.toDataStreamResponse();
   } catch (error) {
     console.error('[MCP] API route error:', error);
-    return new Response(JSON.stringify({ error: 'Internal server error' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' }
-    });
+    return res.status(500).json({ error: 'Internal server error' });
   }
-}
+});
+
+export default router;

@@ -41,6 +41,7 @@ This is a monorepo with four main components:
 - `npm run dev` - Start development server with nodemon and ts-node
 - `npm run build` - Build TypeScript to JavaScript
 - `npm run start` - Start production server from built files
+- Hosts the chat API at `/api/chat` endpoint
 
 ## Architecture Overview
 
@@ -69,7 +70,7 @@ Two distinct architectural patterns are used:
 - Tailwind CSS 4 for styling
 - AI SDK for multi-provider AI integration (Anthropic, OpenAI)
 - OpenTelemetry for observability
-- API routes for chat functionality (`/api/chat/`)
+- Connects to Express server for chat functionality
 
 **Key Components**:
 - `chat-interface.tsx` - Main chat UI component
@@ -83,7 +84,9 @@ Two distinct architectural patterns are used:
 - Express.js with TypeScript support
 - Development setup with nodemon and ts-node for hot reload
 - Production build compilation with TypeScript compiler
+- Chat API endpoint at `/api/chat` with MCP integration
 - Basic REST API endpoints (`/` and `/health`)
+- CORS enabled for client communication
 - JSON and URL-encoded request parsing middleware
 - Runs on port 8080 (configurable via PORT environment variable)
 
@@ -139,7 +142,7 @@ When working with MCP servers:
 3. Server can then be used in production mode
 
 **Integration**:
-- Integrated into client chat interface via `/api/chat/route.ts`
+- Integrated into Express server chat API at `/api/chat`
 - Available alongside Notion, Slack, and web search tools
 - Enables AI to search and access Google Drive content in responses
 
