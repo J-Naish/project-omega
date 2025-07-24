@@ -4,11 +4,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Structure
 
-This is a monorepo with three main components:
+This is a monorepo with four main components:
 
 1. **MCP Servers** (`/mcp-servers/`) - Model Context Protocol server implementations
 2. **Web Application** (`/web/`) - Next.js chat interface
-3. **Documentation** - Architecture and technology stack documentation
+3. **Express Server** (`/server/`) - TypeScript Express server
+4. **Documentation** - Architecture and technology stack documentation
 
 ## Development Commands
 
@@ -35,6 +36,11 @@ This is a monorepo with three main components:
 - `npm run build` - Build for production
 - `npm run start` - Start production server
 - `npm run lint` - Run ESLint
+
+### Express Server (`/server/`)
+- `npm run dev` - Start development server with nodemon and ts-node
+- `npm run build` - Build TypeScript to JavaScript
+- `npm run start` - Start production server from built files
 
 ## Architecture Overview
 
@@ -70,6 +76,16 @@ Two distinct architectural patterns are used:
 - `chat-input.tsx` - User input handling
 - `message-area.tsx` - Message display
 - Custom UI components using Radix UI and Tailwind
+
+### Express Server Architecture
+
+**TypeScript Express Server**:
+- Express.js with TypeScript support
+- Development setup with nodemon and ts-node for hot reload
+- Production build compilation with TypeScript compiler
+- Basic REST API endpoints (`/` and `/health`)
+- JSON and URL-encoded request parsing middleware
+- Runs on port 8080 (configurable via PORT environment variable)
 
 ### MCP Server Development Patterns
 
