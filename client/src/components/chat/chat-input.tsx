@@ -27,8 +27,8 @@ export default function ChatInput({ input, setInput, onSend, onFileAttach, isLoa
           value={input}
           onChange={setInput}
           onKeyDown={handleKeyDown}
-          placeholder={isLoading ? "AI is responding..." : "Type your message..."}
-          className="min-h-[80px] max-h-[200px] resize-none pr-20 pl-12 pb-8"
+          placeholder="Type your message..."
+          className="min-h-[80px] max-h-[320px] resize-none pb-16 rounded-2xl px-4 pt-4"
           rows={3}
         />
         <div className="absolute bottom-2 w-full flex justify-between px-2">
