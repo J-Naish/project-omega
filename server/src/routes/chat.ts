@@ -1,8 +1,8 @@
 import { Router, Request, Response } from 'express';
 import { anthropic } from "@ai-sdk/anthropic";
 import { streamText } from "ai";
-import { experimental_createMCPClient as createMCPClient } from "ai";
-import { Experimental_StdioMCPTransport } from "ai/mcp-stdio";
+// import { experimental_createMCPClient as createMCPClient } from "ai";
+// import { Experimental_StdioMCPTransport } from "ai/mcp-stdio";
 import { webSearch, webSearchDescription, webSearchUsage } from "../tools/web-search";
 
 const router = Router();
