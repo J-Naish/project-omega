@@ -2,9 +2,9 @@
 
 import { useChat } from "@ai-sdk/react";
 import { MessageArea } from "@/components/chat/message/message-area";
-import { ChatInput } from "@/components/chat/chat-input";
+import ChatInput from "@/components/chat/chat-input";
 
-export function ChatInterface() {
+export default function ChatInterface() {
   const { messages, input, handleInputChange, handleSubmit, status } = useChat({
     api: 'http://localhost:8080/chat'
   });
@@ -16,7 +16,7 @@ export function ChatInterface() {
   const isLoading = status === "submitted" || status === "streaming";
 
   return (
-    <div className="flex flex-col h-screen max-w-4xl mx-auto">
+    <div className="flex flex-col min-h-screen max-w-4xl mx-auto">
       <MessageArea messages={messages} />
       <ChatInput
         input={input}

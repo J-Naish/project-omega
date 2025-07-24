@@ -12,7 +12,7 @@ interface ChatInputProps {
   isLoading?: boolean;
 }
 
-export function ChatInput({ input, setInput, onSend, onFileAttach, isLoading = false }: ChatInputProps) {
+export default function ChatInput({ input, setInput, onSend, onFileAttach, isLoading = false }: ChatInputProps) {
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && (e.metaKey || e.ctrlKey) && !isLoading) {
       e.preventDefault();
@@ -21,7 +21,7 @@ export function ChatInput({ input, setInput, onSend, onFileAttach, isLoading = f
   };
 
   return (
-    <div className="mb-4">
+    <div className="mb-4 sticky">
       <div className="relative">
         <Textarea
           value={input}
