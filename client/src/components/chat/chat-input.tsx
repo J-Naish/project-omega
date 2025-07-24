@@ -24,7 +24,7 @@ export default function ChatInput({ input, setInput, onSend, onFileAttach, isLoa
 
   return (
     <div className="mb-4">
-      <form className="w-full divide-y overflow-hidden rounded-xl border bg-background shadow-sm">
+      <form className="w-full divide-y overflow-hidden rounded-xl border bg-background shadow-sm focus-within:border-gray-700 transition-colors">
         <AIInputTextarea value={input} onChange={setInput} onKeyDown={handleKeyDown} />
         <AIInputToolbar>
           <Button variant="ghost" size="icon" onClick={onFileAttach} className="cursor-pointer border">
