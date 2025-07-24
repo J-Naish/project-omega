@@ -1,10 +1,10 @@
 "use client";
 
-import { Card } from "@/components/ui/card";
 import { type Message } from "ai";
 import { useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { UserMessage } from "./user-message";
 
 interface MessageAreaProps {
   messages: Message[];
@@ -69,9 +69,7 @@ export function MessageArea({ messages }: MessageAreaProps) {
             }`}
           >
             {message.role === "user" ? (
-              <Card className="max-w-[80%] p-4 bg-primary text-primary-foreground">
-                <p className="whitespace-pre-wrap">{message.content}</p>
-              </Card>
+              <UserMessage message={message} />
             ) : (
               <div className="max-w-[80%]">
                 <ReactMarkdown 
