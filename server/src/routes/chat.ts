@@ -88,10 +88,10 @@ router.post('/', async (req: Request, res: Response) => {
       // ...gdriveTools,
       webSearch
     };
-    console.log('ツール:', Object.keys(tools));
+    console.log('ツール一覧:', Object.keys(tools));
 
     const { messages } = req.body;
-    console.log("メッセージ", messages);
+    console.log("メッセージ", messages[messages.length - 1]);
 
     const result = streamText({
       model: anthropic("claude-3-5-sonnet-latest"),
