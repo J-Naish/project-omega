@@ -31,11 +31,8 @@ export function MessageArea({ messages }: MessageAreaProps) {
               message.role === "user" ? "justify-end" : "justify-start"
             }`}
           >
-            {message.role === "user" ? (
-              <UserMessage message={message} />
-            ) : (
-              <AssistantMessage message={message} />
-            )}
+            {message.role === "user" && <UserMessage message={message} />}
+            {message.role === "assistant" && <AssistantMessage message={message} />}
           </div>
         ))
       )}
