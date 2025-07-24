@@ -3,10 +3,22 @@ import { anthropic } from "@ai-sdk/anthropic";
 import { streamText } from "ai";
 import { experimental_createMCPClient as createMCPClient } from "ai";
 import { Experimental_StdioMCPTransport } from "ai/mcp-stdio";
-import { systemPrompt } from "../config/systemPrompt";
-import { webSearch } from "../tools/web-search";
+import { webSearch, webSearchDescription, webSearchUsage } from "../tools/web-search";
 
 const router = Router();
+
+
+const systemPrompt =
+`You are a helpful productivity assistant. You have access to tools for managing tasks, communication, and web research:
+
+${webSearchDescription}
+
+**When to use each tool:**
+${webSearchUsage}
+
+Always prioritize using the most appropriate tools for the user's request. For any information that might be time-sensitive or recent, use web search first.
+`;
+
 
 router.post('/', async (req: Request, res: Response) => {
   console.log('チャットAPIが呼ばれました');
@@ -70,13 +82,13 @@ router.post('/', async (req: Request, res: Response) => {
     // const gdriveTools = await gdriveMcpClient.tools();
     // console.log('Google Drive tools loaded:', Object.keys(gdriveTools));
 
-    // const tools = {
-    //   // ...notionTools,
-    //   // ...slackTools,
-    //   // ...gdriveTools,
-    //   webSearch
-    // };
-    // console.log('Combined tools:', Object.keys(tools));
+    const tools = {
+      // ...notionTools,
+      // ...slackTools,
+      // ...gdriveTools,
+      webSearch
+    };
+    console.log('ツール:', Object.keys(tools));
 
     const { messages } = req.body;
     console.log("メッセージ", messages);
@@ -85,22 +97,21 @@ router.post('/', async (req: Request, res: Response) => {
       model: anthropic("claude-3-5-sonnet-latest"),
       messages,
       system: systemPrompt,
-      // tools,
+      tools,
       maxSteps: 5,
       toolCallStreaming: true,
       onChunk: ({ chunk }) => {
-        // if (chunk.type === 'tool-call') {
-        //   console.log(`Calling tool: ${chunk.toolName}`);
-        // }
-        // else if (chunk.type === 'tool-result') {
-        //   console.log(`Tool result received for: ${chunk.toolCallId}`);
-        // }
+        if (chunk.type === 'tool-call') {
+          console.log(`ツール: ${chunk.toolName}`);
+        } else if (chunk.type === 'tool-result') {
+          console.log(`ツールコールID: ${chunk.toolCallId}`);
+        }
       },
-      // onStepFinish: ({ toolCalls }) => {
-      //   if (toolCalls && toolCalls.length > 0) {
-      //     console.log(`Step completed with ${toolCalls.length} tool calls`);
-      //   }
-      // },
+      onStepFinish: ({ toolCalls }) => {
+        if (toolCalls && toolCalls.length > 0) {
+          console.log(`${toolCalls.length}のツールコールの結果、ステップ終了`);
+        }
+      },
       onFinish: () => {
         console.log('ストリーム終了');
         // notionMcpClient.close();

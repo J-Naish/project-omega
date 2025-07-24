@@ -26,12 +26,12 @@ export const webSearch = tool({
   }
 });
 
-export const toolDescription =
+export const webSearchDescription =
 `**Web Search Tool** (for current information):
 - webSearch: Search the web for up-to-date information using live crawling
   - Use for: current events, recent news, latest information, real-time data
   - Returns: title, URL, content excerpt, and published date
   - Always use when users ask for current/recent information or when your knowledge might be outdated`;
 
-export const toolUsage =
+export const webSearchUsage =
 `- **Web Search** → For current events, news, recent developments, real-time information, or when knowledge cutoff might be limiting`;
