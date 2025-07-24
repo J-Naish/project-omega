@@ -6,7 +6,7 @@ import { ChatInput } from "@/components/chat-input";
 
 export function ChatInterface() {
   const { messages, input, handleInputChange, handleSubmit, status } = useChat({
-    api: 'http://localhost:8080/api/chat'
+    api: 'http://localhost:8080/chat'
   });
 
   const handleFileAttach = () => {

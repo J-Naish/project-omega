@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-app.use('/api/chat', chatRoutes);
+app.use('/chat', chatRoutes);
 
 app.get('/', (req: Request, res: Response) => {
   res.json({ message: 'Hello from Express TypeScript server!' });
