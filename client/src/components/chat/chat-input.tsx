@@ -30,7 +30,6 @@ export default function ChatInput({ input, setInput, onSend, onFileAttach, isLoa
           placeholder={isLoading ? "AI is responding..." : "Type your message..."}
           className="min-h-[80px] max-h-[200px] resize-none pr-20 pl-12 pb-8"
           rows={3}
-          disabled={isLoading}
         />
         <div className="absolute bottom-2 w-full flex justify-between px-2">
           <Button
