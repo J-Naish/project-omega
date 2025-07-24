@@ -23,7 +23,7 @@ export default function ChatInput({ input, setInput, onSend, onFileAttach, isLoa
   };
 
   return (
-    <div className="mb-4 sticky">
+    <div className="mb-4">
       <form className="w-full divide-y overflow-hidden rounded-xl border bg-background shadow-sm">
         <AIInputTextarea value={input} onChange={setInput} onKeyDown={handleKeyDown} />
         <AIInputToolbar>

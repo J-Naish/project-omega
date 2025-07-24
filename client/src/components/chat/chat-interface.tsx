@@ -16,15 +16,21 @@ export default function ChatInterface() {
   const isLoading = status === "submitted" || status === "streaming";
 
   return (
-    <div className="flex flex-col min-h-screen max-w-4xl px-4 mx-auto">
-      <MessageArea messages={messages} />
-      <ChatInput
-        input={input}
-        setInput={handleInputChange}
-        onSend={handleSubmit}
-        onFileAttach={handleFileAttach}
-        isLoading={isLoading}
-      />
+    <div className="relative h-screen max-w-4xl px-4 mx-auto">
+      <div className="h-full pb-32 overflow-hidden">
+        <MessageArea messages={messages} />
+      </div>
+      <div className="fixed bottom-0 left-0 right-0 bg-background">
+        <div className="max-w-4xl px-4 mx-auto">
+          <ChatInput
+            input={input}
+            setInput={handleInputChange}
+            onSend={handleSubmit}
+            onFileAttach={handleFileAttach}
+            isLoading={isLoading}
+          />
+        </div>
+      </div>
     </div>
   );
 }

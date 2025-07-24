@@ -18,20 +18,18 @@ export function MessageArea({ messages }: { messages: Message[] }) {
   }, [messages]);
 
   return (
-    <div ref={containerRef} className="flex-1 overflow-y-auto p-4 space-y-8">
-      {messages.length !== 0 && (
-        messages.map((message) => (
-          <div
-            key={message.id}
-            className={`flex ${
-              message.role === "user" ? "justify-end" : "justify-start"
-            }`}
-          >
-            {message.role === "user" && <UserMessage message={message} />}
-            {message.role === "assistant" && <AssistantMessage message={message} />}
-          </div>
-        ))
-      )}
+    <div ref={containerRef} className="h-full overflow-y-auto p-4 space-y-8">
+      {messages.map((message) => (
+        <div
+          key={message.id}
+          className={`flex ${
+            message.role === "user" ? "justify-end" : "justify-start"
+          }`}
+        >
+          {message.role === "user" && <UserMessage message={message} />}
+          {message.role === "assistant" && <AssistantMessage message={message} />}
+        </div>
+      ))}
       <div ref={messagesEndRef} />
     </div>
   );
