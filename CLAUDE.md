@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 This is a monorepo with four main components:
 
 1. **MCP Servers** (`/mcp-servers/`) - Model Context Protocol server implementations
-2. **Web Application** (`/web/`) - Next.js chat interface
+2. **Client Application** (`/client/`) - Next.js chat interface
 3. **Express Server** (`/server/`) - TypeScript Express server
 4. **Documentation** - Architecture and technology stack documentation
 
@@ -31,7 +31,7 @@ This is a monorepo with four main components:
 - Built executable: `dist/index.js`
 - Authentication: Run with `auth` argument first to authenticate with Google
 
-### Web Application (`/web/`)
+### Client Application (`/client/`)
 - `npm run dev` - Start Next.js development server with Turbopack
 - `npm run build` - Build for production
 - `npm run start` - Start production server
@@ -62,7 +62,7 @@ Two distinct architectural patterns are used:
 - Direct MCP protocol handling
 - Google Drive: OAuth2 authentication with Google APIs
 
-### Web Application Architecture
+### Client Application Architecture
 
 **Next.js 15 with App Router**:
 - React 19 with TypeScript
@@ -97,7 +97,7 @@ When working with MCP servers:
 4. **Transport**: All servers use stdio transport for communication
 5. **Google Drive specific**: Requires initial OAuth2 authentication flow before server usage
 
-### Web Development Patterns
+### Client Development Patterns
 
 - Use existing UI components in `/src/components/ui/`
 - Follow Next.js App Router conventions
@@ -112,7 +112,7 @@ When working with MCP servers:
 - **Slack**: `SLACK_BOT_TOKEN`, `SLACK_TEAM_ID`, `SLACK_CHANNEL_IDS`
 - **Google Drive**: OAuth2 credentials stored in `.gdrive-server-credentials.json` (auto-generated after auth)
 
-### Web Application
+### Client Application
 - Next.js environment variables for API keys and configuration
 - OpenTelemetry configuration for observability
 
@@ -139,7 +139,7 @@ When working with MCP servers:
 3. Server can then be used in production mode
 
 **Integration**:
-- Integrated into web chat interface via `/api/chat/route.ts`
+- Integrated into client chat interface via `/api/chat/route.ts`
 - Available alongside Notion, Slack, and web search tools
 - Enables AI to search and access Google Drive content in responses
 
