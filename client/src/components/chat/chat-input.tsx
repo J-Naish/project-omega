@@ -11,7 +11,7 @@ interface ChatInputProps {
   setInput: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onSend: (e: React.FormEvent) => void;
   onFileAttach?: () => void;
-  isLoading?: boolean;
+  status: "submitted" | "streaming" | "ready" | "error";
 }
 
 export default function ChatInput({
@@ -19,8 +19,10 @@ export default function ChatInput({
   setInput,
   onSend,
   onFileAttach,
-  isLoading = false,
+  status,
 }: ChatInputProps) {
+  const isLoading = status === "submitted" || status === "streaming";
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && (e.metaKey || e.ctrlKey) && !isLoading) {
       e.preventDefault();

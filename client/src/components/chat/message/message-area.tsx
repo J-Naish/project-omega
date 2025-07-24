@@ -4,14 +4,14 @@ import { type Message } from "ai";
 import { useEffect, useRef } from "react";
 import UserMessage from "./user-message";
 import AssistantMessage from "./assistant-message";
-import LoadingMessage from "./loading-message";
+import Spinner from "./spinner";
 
 export function MessageArea({
   messages,
-  isWaitingForResponse,
+  status,
 }: {
   messages: Message[];
-  isWaitingForResponse?: boolean;
+  status: "submitted" | "streaming" | "ready" | "error";
 }) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -22,7 +22,7 @@ export function MessageArea({
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages, isWaitingForResponse]);
+  }, [messages, status]);
 
   return (
     <div ref={containerRef} className="h-full overflow-y-auto p-4 space-y-8">
@@ -35,7 +35,7 @@ export function MessageArea({
           {message.role === "assistant" && <AssistantMessage message={message} />}
         </div>
       ))}
-      {isWaitingForResponse && <LoadingMessage />}
+      {status === "submitted" && <Spinner />}
       <div ref={messagesEndRef} />
     </div>
   );
