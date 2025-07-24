@@ -1,7 +1,7 @@
 "use client";
 
 import { useChat } from "@ai-sdk/react";
-import { MessageArea } from "@/components/chat/message-area";
+import { MessageArea } from "@/components/chat/message/message-area";
 import { ChatInput } from "@/components/chat/chat-input";
 
 export function ChatInterface() {
