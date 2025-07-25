@@ -8,11 +8,11 @@ export default function ToolInvocations({ message }: { message: Message }) {
 
   return (
     <>
-      {parts.map((part, index) => {
+      {parts.map((part, index) => (
         <Fragment key={index}>
           {part.type === "tool-invocation" && <ToolInvocation part={part} />}
-        </Fragment>;
-      })}
+        </Fragment>
+      ))}
     </>
   );
 }
