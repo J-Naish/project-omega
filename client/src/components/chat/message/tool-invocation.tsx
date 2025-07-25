@@ -4,7 +4,7 @@ import { type Message } from "ai";
 export default function ToolInvocation({ part }: { part: NonNullable<Message["parts"]>[number] }) {
   if (part.type !== "tool-invocation") return null;
 
-  const { toolName, state } = part.toolInvocation;
+  const { toolName, state, args } = part.toolInvocation;
 
   return (
     <div
@@ -16,7 +16,7 @@ export default function ToolInvocation({ part }: { part: NonNullable<Message["pa
       <div
         className={`relative z-10 p-4 bg-background rounded-2xl ${state !== "result" ? "m-[1px]" : "border"}`}
       >
-        <Head toolName={toolName} state={state} />
+        <Head toolName={toolName} state={state} query={args.query} />
         {state === "result" && part.toolInvocation.result && (
           <div className="mt-2 pl-8 text-xs text-muted-foreground">
             <details className="cursor-pointer">
@@ -37,9 +37,11 @@ export default function ToolInvocation({ part }: { part: NonNullable<Message["pa
 function Head({
   toolName,
   state,
+  query,
 }: {
   toolName: string;
   state: "partial-call" | "call" | "result";
+  query?: string;
 }) {
   let src: string;
   let label: string;
@@ -72,11 +74,18 @@ function Head({
   return (
     <div className="flex items-center gap-2">
       <Image alt={`${toolName} icon`} src={src} width={24} height={24} />
-      <span className={`font-medium ${state !== "result" ? "animate-pulse" : ""}`}>
-        {state === "partial-call" && `Calling ${label}...`}
-        {state === "call" && `Executing ${label}...`}
-        {state === "result" && `${label} completed`}
-      </span>
+      {state === "partial-call" && (
+        <span className="animate-pulse font-medium">{`Calling ${label}...`}</span>
+      )}
+      {state === "call" && (
+        <span className="animate-pulse font-medium">{`Executing ${label}...`}</span>
+      )}
+      {state === "result" && (
+        <div className="flex items-center gap-2 min-w-0 flex-1">
+          <span className="font-medium">{`${label} completed`}</span>
+          {query && <span className="text-xs text-muted-foreground truncate">{query}</span>}
+        </div>
+      )}
     </div>
   );
 }
