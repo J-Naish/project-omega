@@ -120,7 +120,6 @@ router.post("/", async (req: Request, res: Response) => {
       },
       onError: error => {
         console.error("ストリームエラー:", error);
-        throw error;
         // notionMcpClient.close();
         // slackMcpClient.close();
         // gdriveMcpClient.close();
