@@ -122,6 +122,10 @@ function AIInputTextarea({ onChange, ...props }: React.ComponentProps<typeof Tex
         "bg-transparent dark:bg-transparent",
         "focus-visible:ring-0"
       )}
+      style={{
+        scrollbarWidth: "thin",
+        scrollbarColor: "var(--muted-foreground) transparent",
+      }}
       onChange={e => {
         adjustHeight();
         onChange?.(e);
