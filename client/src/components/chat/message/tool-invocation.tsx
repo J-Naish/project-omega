@@ -1,23 +1,6 @@
-import { Fragment } from "react";
 import { type Message } from "ai";
 
-export default function ToolInvocations({ message }: { message: Message }) {
-  const parts = message.parts;
-
-  if (!parts || parts.length === 0) return null;
-
-  return (
-    <>
-      {parts.map((part, index) => (
-        <Fragment key={index}>
-          {part.type === "tool-invocation" && <ToolInvocation part={part} />}
-        </Fragment>
-      ))}
-    </>
-  );
-}
-
-function ToolInvocation({ part }: { part: NonNullable<Message["parts"]>[number] }) {
+export default function ToolInvocation({ part }: { part: NonNullable<Message["parts"]>[number] }) {
   if (part.type !== "tool-invocation") return null;
 
   const { toolName, state } = part.toolInvocation;
