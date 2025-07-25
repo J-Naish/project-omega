@@ -128,7 +128,7 @@ router.post("/", async (req: Request, res: Response) => {
     result.pipeDataStreamToResponse(res);
   } catch (error) {
     console.error("チャットAPIエラー:", error);
-    return res.status(500).json({ message: "サーバーエラー", error: error });
+    return res.status(500).json({ error });
   }
 });
 

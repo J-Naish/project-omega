@@ -5,13 +5,18 @@ import { useEffect, useRef } from "react";
 import UserMessage from "./user-message";
 import AssistantMessage from "./assistant-message";
 import Spinner from "./spinner";
+import ErrorMessage from "./error-message";
 
 export function MessageArea({
   messages,
   status,
+  error,
+  onRetry,
 }: {
   messages: Message[];
   status: "submitted" | "streaming" | "ready" | "error";
+  error?: Error;
+  onRetry?: () => void;
 }) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -36,6 +41,7 @@ export function MessageArea({
         </div>
       ))}
       {status === "submitted" && <Spinner />}
+      {status === "error" && <ErrorMessage error={error} onRetry={onRetry} />}
       <div ref={messagesEndRef} />
     </div>
   );
