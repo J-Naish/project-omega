@@ -5,7 +5,7 @@ import ToolInvocation from "./tool-invocation";
 
 export default function AssistantMessage({ message }: { message: Message }) {
   return (
-    <div>
+    <div className="w-full">
       {message.parts?.map((part, index) => (
         <Fragment key={index}>
           {part.type === "text" && <Markdown>{part.text}</Markdown>}

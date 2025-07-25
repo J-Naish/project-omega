@@ -7,7 +7,9 @@ export default function ToolInvocation({ part }: { part: NonNullable<Message["pa
   const { toolName, state } = part.toolInvocation;
 
   return (
-    <div className={`my-2 relative ${state !== "result" ? "overflow-hidden" : ""} rounded-2xl z-0`}>
+    <div
+      className={`my-2 relative w-full ${state !== "result" ? "overflow-hidden" : ""} rounded-2xl z-0`}
+    >
       {state !== "result" && (
         <div className="absolute inset-[-40px] bg-gradient-to-r from-purple-500 via-cyan-400 to-purple-500 animate-[spin_3s_linear_infinite] blur-[160px] shadow-[0_-3px_12px_0_rgb(186,66,255),0_3px_12px_0_rgb(0,225,255)]" />
       )}
