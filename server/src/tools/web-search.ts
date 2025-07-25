@@ -32,4 +32,4 @@ export const webSearchDescription = `**Web Search Tool** (for current informatio
   - Returns: title, URL, content excerpt, and published date
   - Always use when users ask for current/recent information or when your knowledge might be outdated`;
 
-export const webSearchUsage = `- **Web Search** → For current events, news, recent developments, real-time information, or when knowledge cutoff might be limiting`;
+export const webSearchUsage = `- **Web Search** → For current events, news, recent developments, real-time information, or when knowledge cutoff might be limiting. IMPORTANT: Always include source links in markdown format [title](url) for any information retrieved from web search.`;
