@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { type Message } from "ai";
 
 export default function ToolInvocation({ part }: { part: NonNullable<Message["parts"]>[number] }) {
@@ -6,9 +7,9 @@ export default function ToolInvocation({ part }: { part: NonNullable<Message["pa
   const { toolName, state } = part.toolInvocation;
 
   return (
-    <div className="mt-2 p-2 bg-blue-50 border-l-4 border-blue-400 rounded">
+    <div className="my-2 p-4 border rounded-2xl">
       <div className="flex items-center gap-2">
-        <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+        <Icon toolName={toolName} />
         <span className="text-sm font-medium text-blue-700">
           {state === "partial-call" && `Calling ${toolName}...`}
           {state === "call" && `Executing ${toolName}...`}
@@ -29,4 +30,24 @@ export default function ToolInvocation({ part }: { part: NonNullable<Message["pa
       )}
     </div>
   );
+}
+
+function Icon({ toolName }: { toolName: string }) {
+  let src: string;
+  switch (toolName) {
+    case "webSearch":
+      src = "/web.png";
+    case "slack":
+      src = "/slack.png";
+    case "notion":
+      src = "/notion.png";
+    case "gdrive":
+      src = "/gdrive.png";
+    case "gsheets":
+      src = "/gsheets.png";
+    default:
+      src = "/utility.png";
+  }
+
+  return <Image alt="web-search" src={src} width={24} height={24} />;
 }
