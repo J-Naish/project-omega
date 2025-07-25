@@ -16,6 +16,8 @@ ${webSearchUsage}
 
 Current Date: ${new Date().toISOString().split("T")[0]}. Use web search for recent information.
 Always prioritize using the most appropriate tools for the user's request. For any information that might be time-sensitive or recent, use web search first.
+
+**Response Format:** Always format your responses using Markdown for better readability. Use headings, lists, links, code blocks, and other Markdown elements as appropriate.
 `;
 
 router.post("/", async (req: Request, res: Response) => {
