@@ -16,7 +16,7 @@ export default function ToolInvocation({ part }: { part: NonNullable<Message["pa
       <div
         className={`relative z-10 p-4 bg-background rounded-2xl ${state !== "result" ? "m-[1px]" : "border"}`}
       >
-        <Head toolName={toolName} state={state} query={args.query} />
+        <Head toolName={toolName} state={state} query={args?.query} />
         {state === "result" && part.toolInvocation.result && (
           <div className="mt-2 pl-8 text-xs text-muted-foreground">
             <details className="cursor-pointer">
