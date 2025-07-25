@@ -7,20 +7,27 @@ export default function ToolInvocation({ part }: { part: NonNullable<Message["pa
   const { toolName, state } = part.toolInvocation;
 
   return (
-    <div className="my-2 p-4 border rounded-2xl">
-      <Head toolName={toolName} state={state} />
-      {state === "result" && part.toolInvocation.result && (
-        <div className="mt-2 pl-8 text-xs text-muted-foreground">
-          <details className="cursor-pointer">
-            <summary>View result</summary>
-            <pre className="mt-1 text-xs bg-muted p-2 rounded overflow-x-auto">
-              {typeof part.toolInvocation.result === "string"
-                ? part.toolInvocation.result
-                : JSON.stringify(part.toolInvocation.result, null, 2)}
-            </pre>
-          </details>
-        </div>
+    <div className={`my-2 relative ${state !== "result" ? "overflow-hidden" : ""} rounded-2xl`}>
+      {state !== "result" && (
+        <div className="absolute inset-[-40px] bg-gradient-to-r from-purple-500 via-cyan-400 to-purple-500 animate-[spin_3s_linear_infinite] blur-[160px] shadow-[0_-3px_12px_0_rgb(186,66,255),0_3px_12px_0_rgb(0,225,255)]" />
       )}
+      <div
+        className={`relative z-10 p-4 bg-background rounded-2xl ${state !== "result" ? "m-[1px]" : "border"}`}
+      >
+        <Head toolName={toolName} state={state} />
+        {state === "result" && part.toolInvocation.result && (
+          <div className="mt-2 pl-8 text-xs text-muted-foreground">
+            <details className="cursor-pointer">
+              <summary>View result</summary>
+              <pre className="mt-1 text-xs bg-muted p-2 rounded overflow-x-auto">
+                {typeof part.toolInvocation.result === "string"
+                  ? part.toolInvocation.result
+                  : JSON.stringify(part.toolInvocation.result, null, 2)}
+              </pre>
+            </details>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
