@@ -5,7 +5,7 @@ import ToolInvocation from "./tool-invocation";
 
 export default function AssistantMessage({ message }: { message: Message }) {
   return (
-    <div className="max-w-[80%]">
+    <div>
       {message.parts?.map((part, index) => (
         <Fragment key={index}>
           {part.type === "text" && <Markdown>{part.text}</Markdown>}
