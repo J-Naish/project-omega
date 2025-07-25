@@ -37,17 +37,22 @@ function Icon({ toolName }: { toolName: string }) {
   switch (toolName) {
     case "webSearch":
       src = "/web.png";
+      break;
     case "slack":
       src = "/slack.png";
+      break;
     case "notion":
       src = "/notion.png";
+      break;
     case "gdrive":
       src = "/gdrive.png";
+      break;
     case "gsheets":
       src = "/gsheets.png";
+      break;
     default:
       src = "/utility.png";
   }
 
-  return <Image alt="web-search" src={src} width={24} height={24} />;
+  return <Image alt={`${toolName} icon`} src={src} width={24} height={24} />;
 }
