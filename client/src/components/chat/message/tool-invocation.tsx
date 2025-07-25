@@ -70,7 +70,7 @@ function Head({
   return (
     <div className="flex items-center gap-2">
       <Image alt={`${toolName} icon`} src={src} width={24} height={24} />
-      <span className="font-semibold">
+      <span className={`font-medium ${state !== "result" ? "animate-pulse" : ""}`}>
         {state === "partial-call" && `Calling ${label}...`}
         {state === "call" && `Executing ${label}...`}
         {state === "result" && `${label} completed`}
