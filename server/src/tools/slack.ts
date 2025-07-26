@@ -6,22 +6,119 @@ interface SlackChannel {
   id: string;
   name: string;
   is_archived: boolean;
-  [key: string]: any;
+  is_channel?: boolean;
+  is_group?: boolean;
+  is_im?: boolean;
+  is_mpim?: boolean;
+  is_private?: boolean;
+  is_public?: boolean;
+  created?: number;
+  creator?: string;
+  topic?: {
+    value: string;
+    creator: string;
+    last_set: number;
+  };
+  purpose?: {
+    value: string;
+    creator: string;
+    last_set: number;
+  };
+  num_members?: number;
+}
+
+interface SlackMessage {
+  type: string;
+  ts: string;
+  user?: string;
+  text?: string;
+  thread_ts?: string;
+  reply_count?: number;
+  replies?: Array<{
+    user: string;
+    ts: string;
+  }>;
+  reactions?: Array<{
+    name: string;
+    users: string[];
+    count: number;
+  }>;
+  attachments?: Array<{
+    [key: string]: unknown;
+  }>;
+  blocks?: Array<{
+    [key: string]: unknown;
+  }>;
+}
+
+interface SlackUser {
+  id: string;
+  team_id?: string;
+  name: string;
+  deleted?: boolean;
+  color?: string;
+  real_name?: string;
+  tz?: string;
+  tz_label?: string;
+  tz_offset?: number;
+  profile?: SlackUserProfile;
+  is_admin?: boolean;
+  is_owner?: boolean;
+  is_primary_owner?: boolean;
+  is_restricted?: boolean;
+  is_ultra_restricted?: boolean;
+  is_bot?: boolean;
+  is_app_user?: boolean;
+  updated?: number;
+}
+
+interface SlackUserProfile {
+  avatar_hash?: string;
+  status_text?: string;
+  status_emoji?: string;
+  real_name?: string;
+  display_name?: string;
+  real_name_normalized?: string;
+  display_name_normalized?: string;
+  email?: string;
+  image_24?: string;
+  image_32?: string;
+  image_48?: string;
+  image_72?: string;
+  image_192?: string;
+  image_512?: string;
+  team?: string;
+  first_name?: string;
+  last_name?: string;
+  title?: string;
+  phone?: string;
+  skype?: string;
 }
 
 interface SlackResponse {
   ok: boolean;
+  error?: string;
+  // Channel-related responses
   channels?: SlackChannel[];
   channel?: SlackChannel;
-  response_metadata?: { next_cursor: string };
-  error?: string;
+  // Message-related responses
+  message?: SlackMessage;
+  messages?: SlackMessage[];
   ts?: string;
-  message?: any;
-  messages?: any[];
-  members?: any[];
-  user?: any;
-  profile?: any;
-  [key: string]: any;
+  // User-related responses
+  members?: SlackUser[];
+  user?: SlackUser;
+  profile?: SlackUserProfile;
+  // Pagination
+  response_metadata?: {
+    next_cursor?: string;
+    [key: string]: unknown;
+  };
+  // Additional fields that might be present
+  has_more?: boolean;
+  needed?: string;
+  provided?: string;
+  [key: string]: unknown;
 }
 
 class SlackClient {
@@ -52,13 +149,11 @@ class SlackClient {
         headers: this.botHeaders,
       });
 
-      return response.json();
+      return response.json() as Promise<SlackResponse>;
     }
 
-    const predefinedChannelIdsArray = predefinedChannelIds
-      .split(",")
-      .map((id: string) => id.trim());
-    const channels = [];
+    const predefinedChannelIdsArray = predefinedChannelIds.split(",").map(id => id.trim());
+    const channels: SlackChannel[] = [];
 
     for (const channelId of predefinedChannelIdsArray) {
       const params = new URLSearchParams({
@@ -92,7 +187,7 @@ class SlackClient {
       }),
     });
 
-    return response.json();
+    return response.json() as Promise<SlackResponse>;
   }
 
   async postReply(channel_id: string, thread_ts: string, text: string): Promise<SlackResponse> {
@@ -106,7 +201,7 @@ class SlackClient {
       }),
     });
 
-    return response.json();
+    return response.json() as Promise<SlackResponse>;
   }
 
   async addReaction(
@@ -124,7 +219,7 @@ class SlackClient {
       }),
     });
 
-    return response.json();
+    return response.json() as Promise<SlackResponse>;
   }
 
   async getChannelHistory(channel_id: string, limit: number = 10): Promise<SlackResponse> {
@@ -137,7 +232,7 @@ class SlackClient {
       headers: this.botHeaders,
     });
 
-    return response.json();
+    return response.json() as Promise<SlackResponse>;
   }
 
   async getThreadReplies(channel_id: string, thread_ts: string): Promise<SlackResponse> {
@@ -150,7 +245,7 @@ class SlackClient {
       headers: this.botHeaders,
     });
 
-    return response.json();
+    return response.json() as Promise<SlackResponse>;
   }
 
   async getUsers(limit: number = 100, cursor?: string): Promise<SlackResponse> {
@@ -167,7 +262,7 @@ class SlackClient {
       headers: this.botHeaders,
     });
 
-    return response.json();
+    return response.json() as Promise<SlackResponse>;
   }
 
   async getUserProfile(user_id: string): Promise<SlackResponse> {
@@ -180,7 +275,7 @@ class SlackClient {
       headers: this.botHeaders,
     });
 
-    return response.json();
+    return response.json() as Promise<SlackResponse>;
   }
 }
 
