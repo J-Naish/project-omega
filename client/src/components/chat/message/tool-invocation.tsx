@@ -6,6 +6,8 @@ export default function ToolInvocation({ part }: { part: NonNullable<Message["pa
 
   const { toolName, state, args } = part.toolInvocation;
 
+  console.log(part.toolInvocation);
+
   return (
     <div
       className={`my-2 relative w-full ${state !== "result" ? "overflow-hidden" : ""} rounded-2xl z-0`}
@@ -16,7 +18,7 @@ export default function ToolInvocation({ part }: { part: NonNullable<Message["pa
       <div
         className={`relative z-10 p-4 bg-background rounded-2xl ${state !== "result" ? "m-[1px]" : "border"}`}
       >
-        <Head toolName={toolName} state={state} query={args?.query} />
+        <Head toolName={toolName} state={state} query={args?.query} action={args?.action} />
         {state === "result" && part.toolInvocation.result && (
           <div className="mt-2 pl-8 text-xs text-muted-foreground">
             <details className="cursor-pointer">
@@ -38,10 +40,12 @@ function Head({
   toolName,
   state,
   query,
+  action,
 }: {
   toolName: string;
   state: "partial-call" | "call" | "result";
   query?: string;
+  action?: string;
 }) {
   let src: string;
   let label: string;
@@ -84,6 +88,7 @@ function Head({
         <div className="flex items-center gap-2 min-w-0 flex-1">
           <span className="font-medium">{`${label} completed`}</span>
           {query && <span className="text-xs text-muted-foreground truncate">{query}</span>}
+          {action && <span className="text-xs text-muted-foreground truncate">{action}</span>}
         </div>
       )}
     </div>
