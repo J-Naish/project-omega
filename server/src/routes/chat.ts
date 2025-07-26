@@ -4,6 +4,7 @@ import { streamText } from "ai";
 // import { experimental_createMCPClient as createMCPClient } from "ai";
 // import { Experimental_StdioMCPTransport } from "ai/mcp-stdio";
 import { webSearch, webSearchDescription, webSearchUsage } from "../tools/web-search";
+import { slack, slackDescription, slackUsage } from "../tools/slack";
 
 const router = Router();
 
@@ -11,8 +12,12 @@ const systemPrompt = `You are a helpful productivity assistant. You have access 
 
 ${webSearchDescription}
 
+${slackDescription}
+
 **When to use each tool:**
 ${webSearchUsage}
+
+${slackUsage}
 
 Current Date: ${new Date().toISOString().split("T")[0]}. Use web search for recent information.
 Always prioritize using the most appropriate tools for the user's request. For any information that might be time-sensitive or recent, use web search first.
@@ -87,6 +92,7 @@ router.post("/", async (req: Request, res: Response) => {
       // ...slackTools,
       // ...gdriveTools,
       webSearch,
+      slack,
     };
     console.log("ツール一覧:", Object.keys(tools));
 
