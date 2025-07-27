@@ -3,6 +3,7 @@
 import { useRef, useCallback, useEffect, KeyboardEventHandler } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 import { Send, Paperclip } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -10,7 +11,7 @@ interface ChatInputProps {
   input: string;
   setInput: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onSend: (e: React.FormEvent) => void;
-  onFileAttach?: () => void;
+  onFileSelect?: (files: FileList | null) => void;
   status: "submitted" | "streaming" | "ready" | "error";
 }
 
@@ -18,9 +19,10 @@ export default function ChatInput({
   input,
   setInput,
   onSend,
-  onFileAttach,
+  onFileSelect,
   status,
 }: ChatInputProps) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const isLoading = status === "submitted" || status === "streaming";
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -30,15 +32,37 @@ export default function ChatInput({
     }
   };
 
+  const handleFileButtonClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    onFileSelect?.(files);
+    // Reset the input so the same file can be selected again
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
   return (
     <div className="mb-4">
       <form className="w-full divide-y overflow-hidden rounded-xl border bg-background shadow-sm focus-within:border-gray-700 transition-colors">
         <AIInputTextarea value={input} onChange={setInput} onKeyDown={handleKeyDown} />
         <AIInputToolbar>
+          <Input
+            ref={fileInputRef}
+            type="file"
+            onChange={handleFileChange}
+            className="hidden"
+            multiple
+            accept=".pdf,.txt,.md,.doc,.docx,.rtf,.csv,.json,.xml,.html,.htm,image/*"
+          />
           <Button
             variant="ghost"
             size="icon"
-            onClick={onFileAttach}
+            onClick={handleFileButtonClick}
+            type="button"
             className="cursor-pointer border"
           >
             <Paperclip />

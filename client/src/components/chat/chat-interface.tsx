@@ -1,16 +1,39 @@
 "use client";
 
+import { useState } from "react";
 import { useChat } from "@ai-sdk/react";
 import { MessageArea } from "@/components/chat/message/message-area";
 import ChatInput from "@/components/chat/chat-input";
 
 export default function ChatInterface() {
+  const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
+
   const { messages, input, handleInputChange, handleSubmit, status, error, reload } = useChat({
     api: "http://localhost:8080/chat",
   });
 
-  const handleFileAttach = () => {
-    console.log("File attachment clicked");
+  const handleFileSelect = (files: FileList | null) => {
+    if (files) {
+      const fileArray = Array.from(files);
+      setAttachedFiles(prev => [...prev, ...fileArray]);
+      console.log(
+        "Files selected:",
+        fileArray.map(f => f.name)
+      );
+    }
+  };
+
+  const handleSubmitWithFiles = (e: React.FormEvent) => {
+    if (attachedFiles.length > 0) {
+      // For now, just log the files - AI SDK file handling will be implemented next
+      console.log(
+        "Submitting with files:",
+        attachedFiles.map(f => f.name)
+      );
+      // Clear attached files after submission
+      setAttachedFiles([]);
+    }
+    handleSubmit(e);
   };
 
   return (
@@ -23,8 +46,8 @@ export default function ChatInterface() {
           <ChatInput
             input={input}
             setInput={handleInputChange}
-            onSend={handleSubmit}
-            onFileAttach={handleFileAttach}
+            onSend={handleSubmitWithFiles}
+            onFileSelect={handleFileSelect}
             status={status}
           />
         </div>
