@@ -54,15 +54,6 @@ This is a monorepo with four main components:
 
 Three distinct architectural patterns are used:
 
-**OpenAPI-based Servers** (Notion):
-
-- Generic framework that auto-generates MCP tools from OpenAPI specifications
-- Core components:
-  - `MCPProxy` - Converts OpenAPI operations to MCP tools
-  - `OpenAPIToMCPConverter` - Transforms schemas
-  - `HttpClient` - Handles API requests with authentication
-- Configuration via environment variables and headers
-
 **Standalone MCP Servers** (Google Drive):
 
 - Traditional MCP server implementation with stdio transport
@@ -71,13 +62,24 @@ Three distinct architectural patterns are used:
 - Direct MCP protocol handling
 - Google Drive: OAuth2 authentication with Google APIs
 
-**AI SDK Integrated Tools** (Slack):
+**AI SDK Integrated Tools** (Slack, Notion):
 
 - Direct integration into Express server as AI SDK tools
 - No separate MCP server process required
 - Extracted from original MCP server implementation
 - Better performance and simpler deployment
 - Type-safe implementation with comprehensive TypeScript interfaces
+- Unified tool interface with action-based parameters
+
+**Legacy OpenAPI-based Servers** (Original Notion):
+
+- Generic framework that auto-generates MCP tools from OpenAPI specifications
+- Core components:
+  - `MCPProxy` - Converts OpenAPI operations to MCP tools
+  - `OpenAPIToMCPConverter` - Transforms schemas
+  - `HttpClient` - Handles API requests with authentication
+- Configuration via environment variables and headers
+- **Note**: Notion has been migrated to AI SDK integration for better performance
 
 ### Client Application Architecture
 
@@ -113,9 +115,9 @@ Three distinct architectural patterns are used:
 
 When working with MCP servers:
 
-1. **For APIs with OpenAPI specs**: Use the openapi-mcp-server framework pattern (like Notion)
+1. **For new integrations**: Prefer AI SDK tool integration for better performance (like Slack, Notion)
 2. **For standalone external integrations**: Use traditional MCP server pattern with stdio transport (like Google Drive)
-3. **For Express server integration**: Convert MCP server logic to AI SDK tools for better performance (like Slack)
+3. **For legacy OpenAPI specs**: Original openapi-mcp-server framework (deprecated, migrate to AI SDK)
 4. **Authentication**: Configure via environment variables and headers, or OAuth2 flow for Google Drive
 5. **Transport**: Standalone servers use stdio transport; integrated tools run directly in Express process
 6. **Google Drive specific**: Requires initial OAuth2 authentication flow before server usage
@@ -141,11 +143,18 @@ To integrate an MCP server directly into the Express server:
 
 ## Environment Configuration
 
-### MCP Servers
+### Express Server Tools
 
-- **Notion**: `OPENAPI_MCP_HEADERS` for API authentication (JSON format)
+- **Notion**: `NOTION_TOKEN` for Notion API authentication
 - **Slack**: `SLACK_BOT_TOKEN`, `SLACK_TEAM_ID`, `SLACK_CHANNEL_IDS`
+
+### Standalone MCP Servers
+
 - **Google Drive**: OAuth2 credentials stored in `.gdrive-server-credentials.json` (auto-generated after auth)
+
+### Legacy (Deprecated)
+
+- **Original Notion MCP**: `OPENAPI_MCP_HEADERS` for API authentication (JSON format) - use AI SDK integration instead
 
 ### Client Application
 
@@ -173,6 +182,37 @@ To integrate an MCP server directly into the Express server:
 - Type-safe implementation with comprehensive TypeScript interfaces
 - Action-based parameter system for multiple operations
 - Environment variables: `SLACK_BOT_TOKEN`, `SLACK_TEAM_ID`, `SLACK_CHANNEL_IDS`
+
+### Notion Integration (AI SDK Tool)
+
+**Available Actions**:
+
+- `get_user` - Retrieve a specific user by ID
+- `get_users` - List all users in the workspace
+- `get_current_user` - Get the authenticated user's information
+- `search` - Search across pages and databases in the workspace
+- `get_database` - Retrieve database structure and metadata
+- `query_database` - Query database with filters and sorting
+- `create_database` - Create a new database
+- `update_database` - Update database properties
+- `get_page` - Retrieve page content and properties
+- `create_page` - Create new pages in databases or as child pages
+- `update_page` - Update page properties and content
+- `get_block` - Retrieve individual block content
+- `get_block_children` - Get child blocks of a page or block
+- `append_block_children` - Add new blocks to a page or block
+- `update_block` - Update block content
+- `delete_block` - Delete a block
+- `get_comments` - Retrieve comments on pages or blocks
+- `create_comment` - Add comments to pages or blocks
+
+**Implementation**:
+
+- Direct integration into Express server as unified AI SDK tool
+- Type-safe implementation with comprehensive TypeScript interfaces
+- Action-based parameter system for 18 different operations
+- Full coverage of Notion API v1 capabilities
+- Environment variables: `NOTION_TOKEN`
 
 ### Google Drive MCP Server
 

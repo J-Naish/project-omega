@@ -5,6 +5,7 @@ import { streamText } from "ai";
 // import { Experimental_StdioMCPTransport } from "ai/mcp-stdio";
 import { webSearch, webSearchDescription, webSearchUsage } from "../tools/web-search";
 import { slack, slackDescription, slackUsage } from "../tools/slack";
+import { notion, notionDescription, notionUsage } from "../tools/notion";
 
 const router = Router();
 
@@ -14,10 +15,14 @@ ${webSearchDescription}
 
 ${slackDescription}
 
+${notionDescription}
+
 **When to use each tool:**
 ${webSearchUsage}
 
 ${slackUsage}
+
+${notionUsage}
 
 Current Date: ${new Date().toISOString().split("T")[0]}. Use web search for recent information.
 Always prioritize using the most appropriate tools for the user's request. For any information that might be time-sensitive or recent, use web search first.
@@ -93,6 +98,7 @@ router.post("/", async (req: Request, res: Response) => {
       // ...gdriveTools,
       webSearch,
       slack,
+      notion,
     };
     console.log("ツール一覧:", Object.keys(tools));
 
