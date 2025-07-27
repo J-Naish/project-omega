@@ -1,4 +1,0 @@
-node_modules/
-dist/
-gcp-oauth.keys.json
-.gdrive-server-credentials.json
