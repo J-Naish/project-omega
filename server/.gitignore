@@ -25,6 +25,8 @@ logs
 .env.test.local
 .env.production.local
 
+credentials/
+
 # IDE and editor files
 .vscode/
 .idea/

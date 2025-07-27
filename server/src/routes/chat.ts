@@ -6,6 +6,8 @@ import { streamText } from "ai";
 import { webSearch, webSearchDescription, webSearchUsage } from "../tools/web-search";
 import { slack, slackDescription, slackUsage } from "../tools/slack";
 import { notion, notionDescription, notionUsage } from "../tools/notion";
+import { googleDrive, googleDriveDescription, googleDriveUsage } from "../tools/google-drive";
+import { googleSheets, googleSheetsDescription, googleSheetsUsage } from "../tools/google-sheets";
 
 const router = Router();
 
@@ -17,12 +19,20 @@ ${slackDescription}
 
 ${notionDescription}
 
+${googleDriveDescription}
+
+${googleSheetsDescription}
+
 **When to use each tool:**
 ${webSearchUsage}
 
 ${slackUsage}
 
 ${notionUsage}
+
+${googleDriveUsage}
+
+${googleSheetsUsage}
 
 Current Date: ${new Date().toISOString().split("T")[0]}. Use web search for recent information.
 Always prioritize using the most appropriate tools for the user's request. For any information that might be time-sensitive or recent, use web search first.
@@ -99,6 +109,8 @@ router.post("/", async (req: Request, res: Response) => {
       webSearch,
       slack,
       notion,
+      googleDrive,
+      googleSheets,
     };
     console.log("ツール一覧:", Object.keys(tools));
 

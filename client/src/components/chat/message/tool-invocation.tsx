@@ -62,12 +62,12 @@ function Head({
       src = "/notion.png";
       label = "Notion";
       break;
-    case "gdrive":
-      src = "/gdrive.png";
+    case "googleDrive":
+      src = "/google-drive.png";
       label = "Google Drive";
       break;
-    case "gsheets":
-      src = "/gsheets.png";
+    case "googleSheets":
+      src = "/google-sheets.png";
       label = "Google Sheets";
       break;
     default:
