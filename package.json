@@ -1,0 +1,31 @@
+{
+  "name": "project-omega",
+  "scripts": {
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
+    "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
+    "format:client": "prettier --write \"client/**/*.{js,jsx,ts,tsx,json,css,md}\"",
+    "format:server": "prettier --write \"server/**/*.{js,ts,json,md}\"",
+    "lint": "npm run lint:client && npm run lint:server",
+    "lint:client": "cd client && npm run lint",
+    "lint:server": "cd server && npm run lint",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.2",
+    "prettier": "^3.0.0"
+  },
+  "lint-staged": {
+    "client/**/*.{js,jsx,ts,tsx}": [
+      "prettier --write",
+      "cd client && npm run lint:fix"
+    ],
+    "server/**/*.{js,ts}": [
+      "prettier --write",
+      "cd server && npm run lint:fix"
+    ],
+    "**/*.{json,css,md}": [
+      "prettier --write"
+    ]
+  }
+}
