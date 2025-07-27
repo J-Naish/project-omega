@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Project Omega 起動スクリプト
-# このスクリプトはプロジェクトのすべてのコンポーネントを起動します
+# このスクリプトはクライアントとサーバーの開発環境を起動します
 
 git pull
 
@@ -59,79 +59,59 @@ cd "$SCRIPT_DIR"
 # 既存のプロセスをクリーンアップ
 print_status "既存のプロセスをクリーンアップしています..."
 kill_port 3000  # Next.js開発サーバー
+kill_port 8080  # Express API サーバー
 
-# 必要に応じてMCPサーバーをビルド
-print_status "MCPサーバーをビルドしています..."
-
-# Notion MCPサーバーをビルド
-if [ -d "mcp-servers/notion" ]; then
-    print_status "Notion MCPサーバーをビルドしています..."
-    cd mcp-servers/notion
-    print_status "Notion MCPサーバーの依存関係をインストール/更新しています..."
-    npm install
-    npm run build
-    cd "$SCRIPT_DIR"
-    print_success "Notion MCPサーバーのビルドが完了しました"
+# Google認証ファイルの確認
+print_status "Google認証設定を確認しています..."
+if [ ! -f "server/credentials/.gdrive-server-credentials.json" ]; then
+    print_warning "Google Drive認証が未完了です"
+    print_status "Google Drive/Sheetsツールを使用する際に自動で認証フローが開始されます"
+    print_status "事前認証したい場合は、server/credentials/gcp-oauth.keys.json ファイルを配置してください"
 else
-    print_warning "Notion MCPサーバーディレクトリが見つかりません"
+    print_success "Google Drive認証ファイルが見つかりました"
 fi
 
-# Slack MCPサーバーをビルド
-if [ -d "mcp-servers/slack" ]; then
-    print_status "Slack MCPサーバーをビルドしています..."
-    cd mcp-servers/slack
-    print_status "Slack MCPサーバーの依存関係をインストール/更新しています..."
-    npm install
-    npm run build
-    cd "$SCRIPT_DIR"
-    print_success "Slack MCPサーバーのビルドが完了しました"
-else
-    print_warning "Slack MCPサーバーディレクトリが見つかりません"
-fi
+# Express サーバーをセットアップ
+print_status "Express サーバーをセットアップしています..."
+cd server
 
-# Google Drive MCPサーバーをビルド
-if [ -d "mcp-servers/gdrive" ]; then
-    print_status "Google Drive MCPサーバーをビルドしています..."
-    cd mcp-servers/gdrive
-    print_status "Google Drive MCPサーバーの依存関係をインストール/更新しています..."
-    npm install
-    npm run build
-    npm run auth
-    # 認証ファイルの存在確認
-    if [ ! -f ".gdrive-server-credentials.json" ]; then
-        print_warning "Google Drive認証が未完了です"
-        print_status "認証を実行するには以下のコマンドを実行してください:"
-        print_status "cd mcp-servers/gdrive && node dist/index.js auth"
-    else
-        print_success "Google Drive認証ファイルが見つかりました"
-    fi
-    
-    cd "$SCRIPT_DIR"
-    print_success "Google Drive MCPサーバーのビルドが完了しました"
-else
-    print_warning "Google Drive MCPサーバーディレクトリが見つかりません"
-fi
-
-# Webアプリケーションをインストールして起動
-print_status "Webアプリケーションをセットアップしています..."
-cd web
-
-print_status "Webアプリケーションの依存関係をインストール/更新しています..."
+print_status "Express サーバーの依存関係をインストール/更新しています..."
 npm install
 
 # リントを実行
-print_status "コード品質チェックを実行しています..."
+print_status "Express サーバーのコード品質チェックを実行しています..."
 npm run lint
 
-print_success "すべてのコンポーネントのビルドと検証が完了しました"
+cd "$SCRIPT_DIR"
 
-# 開発サーバーを起動
-print_status "開発サーバーを http://localhost:3000 で起動しています..."
-print_status "サーバーを停止するには Ctrl+C を押してください"
+# クライアントアプリケーションをセットアップ
+print_status "クライアントアプリケーションをセットアップしています..."
+cd client
+
+print_status "クライアントアプリケーションの依存関係をインストール/更新しています..."
+npm install
+
+cd "$SCRIPT_DIR"
+
+print_success "すべてのコンポーネントのセットアップが完了しました"
 print_status ""
-print_success "🚀 Project Omega が起動しています！"
-print_status "ダッシュボードはこちらで利用可能です: ${BLUE}http://localhost:3000${NC}"
+print_success "🚀 Project Omega を起動しています！"
+print_status "クライアント: ${BLUE}http://localhost:3000${NC}"
+print_status "Express API: ${BLUE}http://localhost:8080${NC}"
+print_status ""
+print_status "サーバーを停止するには各ターミナルで Ctrl+C を押してください"
 print_status ""
 
-# Next.js開発サーバーを起動
-exec npm run dev
+# 並行してサーバーを起動
+print_status "Express サーバーを http://localhost:8080 で起動しています..."
+cd server
+npm run dev &
+SERVER_PID=$!
+
+cd "$SCRIPT_DIR"
+
+print_status "クライアントを http://localhost:3000 で起動しています..."
+cd client
+
+# クライアントをフォアグラウンドで実行（メインプロセス）
+npm run dev
