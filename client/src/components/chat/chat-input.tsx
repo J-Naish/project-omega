@@ -14,6 +14,7 @@ interface ChatInputProps {
   onFileSelect?: (files: FileList | null) => void;
   attachedFiles?: File[];
   onRemoveFile?: (index: number) => void;
+  onClearInput?: () => void;
   status: "submitted" | "streaming" | "ready" | "error";
 }
 
@@ -24,6 +25,7 @@ export default function ChatInput({
   onFileSelect,
   attachedFiles = [],
   onRemoveFile,
+  onClearInput,
   status,
 }: ChatInputProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -48,6 +50,8 @@ export default function ChatInput({
     // Hide previews immediately on submit
     if (attachedFiles.length > 0) {
       setShowPreviews(false);
+      // Clear input for file submissions
+      onClearInput?.();
     }
     onSend(e);
   };

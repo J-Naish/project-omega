@@ -72,6 +72,10 @@ export default function ChatInterface() {
     setAttachedFiles(prev => prev.filter((_, i) => i !== index));
   };
 
+  const handleClearInput = () => {
+    setInput("");
+  };
+
   const handleSubmitWithFiles = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -96,8 +100,7 @@ export default function ChatInterface() {
           experimental_attachments: attachments,
         });
 
-        // Clear input and attached files after submission
-        setInput("");
+        // Clear attached files after submission
         setAttachedFiles([]);
       } else {
         // No files, use regular submit
@@ -122,6 +125,7 @@ export default function ChatInterface() {
             onFileSelect={handleFileSelect}
             attachedFiles={attachedFiles}
             onRemoveFile={handleRemoveFile}
+            onClearInput={handleClearInput}
             status={status}
           />
         </div>
