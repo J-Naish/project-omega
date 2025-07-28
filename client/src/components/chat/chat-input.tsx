@@ -4,7 +4,7 @@ import { useRef, useCallback, useEffect, KeyboardEventHandler } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { Send, Paperclip } from "lucide-react";
+import { Send, Paperclip, X, FileText, Image, File } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ChatInputProps {
@@ -12,6 +12,8 @@ interface ChatInputProps {
   setInput: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onSend: (e: React.FormEvent) => void;
   onFileSelect?: (files: FileList | null) => void;
+  attachedFiles?: File[];
+  onRemoveFile?: (index: number) => void;
   status: "submitted" | "streaming" | "ready" | "error";
 }
 
@@ -20,6 +22,8 @@ export default function ChatInput({
   setInput,
   onSend,
   onFileSelect,
+  attachedFiles = [],
+  onRemoveFile,
   status,
 }: ChatInputProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -47,8 +51,14 @@ export default function ChatInput({
 
   return (
     <div className="mb-4">
-      <form className="w-full divide-y overflow-hidden rounded-xl border bg-background shadow-sm focus-within:border-gray-700 transition-colors">
-        <AIInputTextarea value={input} onChange={setInput} onKeyDown={handleKeyDown} />
+      <form className="w-full overflow-hidden rounded-xl border bg-background shadow-sm focus-within:border-gray-700 transition-colors">
+        <AIInputTextarea
+          value={input}
+          onChange={setInput}
+          onKeyDown={handleKeyDown}
+          attachedFiles={attachedFiles}
+          onRemoveFile={onRemoveFile}
+        />
         <AIInputToolbar>
           <Input
             ref={fileInputRef}
@@ -123,7 +133,80 @@ const useAutoResizeTextarea = ({
   return { textareaRef, adjustHeight };
 };
 
-function AIInputTextarea({ onChange, ...props }: React.ComponentProps<typeof Textarea>) {
+const getFileIcon = (file: File) => {
+  const type = file.type;
+  if (type.startsWith("image/")) return Image;
+  if (type === "application/pdf") return FileText;
+  if (
+    type.startsWith("text/") ||
+    type === "application/json" ||
+    type === "text/csv" ||
+    file.name.endsWith(".md") ||
+    file.name.endsWith(".txt")
+  )
+    return FileText;
+  return File;
+};
+
+const formatFileSize = (bytes: number) => {
+  if (bytes === 0) return "0 Bytes";
+  const k = 1024;
+  const sizes = ["Bytes", "KB", "MB", "GB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+};
+
+interface FilePreviewProps {
+  files: File[];
+  onRemoveFile?: (index: number) => void;
+}
+
+function FilePreview({ files, onRemoveFile }: FilePreviewProps) {
+  if (files.length === 0) return null;
+
+  return (
+    <div className="flex flex-wrap gap-2 p-2">
+      {files.map((file, index) => {
+        const IconComponent = getFileIcon(file);
+        return (
+          <div
+            key={`${file.name}-${index}`}
+            className="flex items-center gap-2 bg-muted/50 rounded-md px-3 py-2 text-sm"
+          >
+            <IconComponent className="h-4 w-4 text-muted-foreground" />
+            <div className="flex flex-col min-w-0">
+              <span className="truncate max-w-32" title={file.name}>
+                {file.name}
+              </span>
+              <span className="text-xs text-muted-foreground">{formatFileSize(file.size)}</span>
+            </div>
+            {onRemoveFile && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="h-4 w-4 p-0 hover:bg-destructive/10 hover:text-destructive cursor-pointer"
+                onClick={() => onRemoveFile(index)}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function AIInputTextarea({
+  onChange,
+  attachedFiles = [],
+  onRemoveFile,
+  ...props
+}: React.ComponentProps<typeof Textarea> & {
+  attachedFiles?: File[];
+  onRemoveFile?: (index: number) => void;
+}) {
   const { textareaRef, adjustHeight } = useAutoResizeTextarea({
     minHeight: 64,
     maxHeight: 400,
@@ -140,25 +223,28 @@ function AIInputTextarea({ onChange, ...props }: React.ComponentProps<typeof Tex
   };
 
   return (
-    <Textarea
-      className={cn(
-        "w-full resize-none rounded-none border-none p-4 shadow-none outline-none ring-0",
-        "bg-transparent dark:bg-transparent",
-        "focus-visible:ring-0"
-      )}
-      style={{
-        scrollbarWidth: "thin",
-        scrollbarColor: "var(--muted-foreground) transparent",
-      }}
-      onChange={e => {
-        adjustHeight();
-        onChange?.(e);
-      }}
-      onKeyDown={handleKeyDown}
-      placeholder="Type your message..."
-      ref={textareaRef}
-      {...props}
-    />
+    <div className="relative">
+      <FilePreview files={attachedFiles} onRemoveFile={onRemoveFile} />
+      <Textarea
+        className={cn(
+          "w-full resize-none rounded-none border-none p-4 shadow-none outline-none ring-0",
+          "bg-transparent dark:bg-transparent",
+          "focus-visible:ring-0"
+        )}
+        style={{
+          scrollbarWidth: "thin",
+          scrollbarColor: "var(--muted-foreground) transparent",
+        }}
+        onChange={e => {
+          adjustHeight();
+          onChange?.(e);
+        }}
+        onKeyDown={handleKeyDown}
+        placeholder="Type your message..."
+        ref={textareaRef}
+        {...props}
+      />
+    </div>
   );
 }
 

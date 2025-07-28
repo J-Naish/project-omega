@@ -23,6 +23,10 @@ export default function ChatInterface() {
     }
   };
 
+  const handleRemoveFile = (index: number) => {
+    setAttachedFiles(prev => prev.filter((_, i) => i !== index));
+  };
+
   const handleSubmitWithFiles = (e: React.FormEvent) => {
     if (attachedFiles.length > 0) {
       // For now, just log the files - AI SDK file handling will be implemented next
@@ -48,6 +52,8 @@ export default function ChatInterface() {
             setInput={handleInputChange}
             onSend={handleSubmitWithFiles}
             onFileSelect={handleFileSelect}
+            attachedFiles={attachedFiles}
+            onRemoveFile={handleRemoveFile}
             status={status}
           />
         </div>
