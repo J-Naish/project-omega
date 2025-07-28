@@ -58,7 +58,11 @@ export function ChatInputToolbar({
         disabled={!input.trim() || isLoading}
         className="cursor-pointer"
       >
-        <Send />
+        {status === "submitted" || status === "streaming" ? (
+          <div className="w-4 h-4 bg-background rounded-sm" />
+        ) : (
+          <Send className="w-4 h-4" />
+        )}
       </Button>
     </div>
   );
