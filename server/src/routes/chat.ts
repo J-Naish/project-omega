@@ -1,13 +1,17 @@
 import { Router, Request, Response } from "express";
 import { anthropic } from "@ai-sdk/anthropic";
 import { streamText } from "ai";
-// import { experimental_createMCPClient as createMCPClient } from "ai";
-// import { Experimental_StdioMCPTransport } from "ai/mcp-stdio";
 import { webSearch, webSearchDescription, webSearchUsage } from "../tools/web-search";
 import { slack, slackDescription, slackUsage } from "../tools/slack";
 import { notion, notionDescription, notionUsage } from "../tools/notion";
 import { googleDrive, googleDriveDescription, googleDriveUsage } from "../tools/google-drive";
 import { googleSheets, googleSheetsDescription, googleSheetsUsage } from "../tools/google-sheets";
+
+interface FileAttachment {
+  name: string;
+  contentType: string;
+  url: string;
+}
 
 const router = Router();
 
@@ -22,6 +26,15 @@ ${notionDescription}
 ${googleDriveDescription}
 
 ${googleSheetsDescription}
+
+**File Attachment Support:**
+You can analyze and work with user-uploaded files including:
+- Images (JPG, PNG, GIF, etc.) - You can see and describe image content
+- PDFs - You can read and extract text content
+- Text files (.txt, .md, .csv, .json, etc.) - You can read and process the content
+- Documents (.doc, .docx) - You can read document content
+
+When users attach files, analyze them thoroughly and provide detailed insights, summaries, or answers based on the file content.
 
 **When to use each tool:**
 ${webSearchUsage}
@@ -47,65 +60,7 @@ router.post("/", async (req: Request, res: Response) => {
   console.log("リクエストボディのキー:", Object.keys(req.body || {}));
 
   try {
-    // console.log('Creating Notion transport...');
-    // const notionTransport = new Experimental_StdioMCPTransport({
-    //   command: "node",
-    //   args: [`${process.env.PROJECT_PATH}/project-omega/mcp-servers/notion/bin/cli.mjs`],
-    //   env: {
-    //     OPENAPI_MCP_HEADERS: JSON.stringify({
-    //       "Authorization": `Bearer ${process.env.NOTION_TOKEN}`,
-    //       "Notion-Version": "2022-06-28"
-    //     })
-    //   }
-    // });
-
-    // console.log('Creating Notion MCP client...');
-    // const notionMcpClient = await createMCPClient({
-    //   transport: notionTransport,
-    // });
-
-    // console.log('Getting Notion tools...');
-    // const notionTools = await notionMcpClient.tools();
-    // console.log('Notion tools loaded:', Object.keys(notionTools));
-
-    // console.log('Creating Slack transport...');
-    // const slackTransport = new Experimental_StdioMCPTransport({
-    //   command: "node",
-    //     args: [`${process.env.PROJECT_PATH}/project-omega/mcp-servers/slack/dist/index.js`],
-    //     env: {
-    //       SLACK_TEAM_ID: process.env.SLACK_TEAM_ID!,
-    //       SLACK_BOT_TOKEN: process.env.SLACK_BOT_TOKEN!,
-    //     }
-    // });
-
-    // console.log('Creating Slack MCP client...');
-    // const slackMcpClient = await createMCPClient({
-    //   transport: slackTransport,
-    // });
-
-    // console.log('Getting Slack tools...');
-    // const slackTools = await slackMcpClient.tools();
-    // console.log('Slack tools loaded:', Object.keys(slackTools));
-
-    // console.log('Creating Google Drive transport...');
-    // const gdriveTransport = new Experimental_StdioMCPTransport({
-    //   command: "node",
-    //   args: [`${process.env.PROJECT_PATH}/project-omega/mcp-servers/gdrive/dist/index.js`],
-    // });
-
-    // console.log('Creating Google Drive MCP client...');
-    // const gdriveMcpClient = await createMCPClient({
-    //   transport: gdriveTransport,
-    // });
-
-    // console.log('Getting Google Drive tools...');
-    // const gdriveTools = await gdriveMcpClient.tools();
-    // console.log('Google Drive tools loaded:', Object.keys(gdriveTools));
-
     const tools = {
-      // ...notionTools,
-      // ...slackTools,
-      // ...gdriveTools,
       webSearch,
       slack,
       notion,
@@ -115,7 +70,43 @@ router.post("/", async (req: Request, res: Response) => {
     console.log("ツール一覧:", Object.keys(tools));
 
     const { messages } = req.body;
-    console.log("メッセージ", messages[messages.length - 1]);
+    const lastMessage = messages[messages.length - 1];
+    console.log("メッセージ", lastMessage);
+
+    // Log file attachments if present
+    if (lastMessage?.experimental_attachments && lastMessage.experimental_attachments.length > 0) {
+      console.log("添付ファイル数:", lastMessage.experimental_attachments.length);
+      lastMessage.experimental_attachments.forEach((attachment: FileAttachment, index: number) => {
+        console.log(`添付ファイル ${index + 1}:`, {
+          name: attachment.name,
+          contentType: attachment.contentType,
+          size: attachment.url ? Math.round(attachment.url.length * 0.75) : "unknown", // Rough base64 size estimate
+        });
+
+        // Validate attachment format
+        if (!attachment.name || !attachment.contentType || !attachment.url) {
+          console.warn(`添付ファイル ${index + 1} の形式が不正です:`, attachment);
+        }
+
+        // Check if it's a supported file type
+        const supportedTypes = [
+          "image/",
+          "application/pdf",
+          "text/",
+          "application/json",
+          "text/csv",
+          "application/msword",
+          "application/vnd.openxmlformats-officedocument",
+        ];
+        const isSupported = supportedTypes.some(type => attachment.contentType?.startsWith(type));
+        if (!isSupported) {
+          console.warn(
+            `添付ファイル ${index + 1} はサポートされていないタイプです:`,
+            attachment.contentType
+          );
+        }
+      });
+    }
 
     const result = streamText({
       model: anthropic("claude-3-5-sonnet-latest"),
@@ -138,15 +129,9 @@ router.post("/", async (req: Request, res: Response) => {
       },
       onFinish: () => {
         console.log("ストリーム終了");
-        // notionMcpClient.close();
-        // slackMcpClient.close();
-        // gdriveMcpClient.close();
       },
       onError: error => {
         console.error("ストリームエラー:", error);
-        // notionMcpClient.close();
-        // slackMcpClient.close();
-        // gdriveMcpClient.close();
       },
     });
 
