@@ -20,9 +20,9 @@ export class GoogleAuthManager {
   private constructor() {
     this.credentialsPath =
       process.env.GDRIVE_CREDENTIALS_PATH ||
-      path.join(process.cwd(), ".gdrive-server-credentials.json");
+      path.join(process.cwd(), "credentials/.gdrive-server-credentials.json");
     this.oauthPath =
-      process.env.GDRIVE_OAUTH_PATH || path.join(process.cwd(), "gcp-oauth.keys.json");
+      process.env.GDRIVE_OAUTH_PATH || path.join(process.cwd(), "credentials/gcp-oauth.keys.json");
   }
 
   public static getInstance(): GoogleAuthManager {
@@ -163,3 +163,40 @@ export class GoogleAuthManager {
 
 // Export a singleton instance
 export const googleAuth = GoogleAuthManager.getInstance();
+
+/**
+ * Standalone function to update Google authentication
+ * Can be used from package.json scripts or called directly
+ */
+export async function updateGoogleAuth(): Promise<void> {
+  try {
+    console.log("🔄 Starting Google authentication update...");
+
+    const authManager = GoogleAuthManager.getInstance();
+    await authManager.authenticateAndSaveCredentials();
+
+    console.log("✅ Google authentication update completed successfully!");
+    console.log(`📁 Credentials saved to: ${authManager.getCredentialsPath()}`);
+  } catch (error) {
+    console.error("❌ Google authentication update failed:", error);
+    throw error;
+  }
+}
+
+/**
+ * Main function for direct execution
+ */
+async function main(): Promise<void> {
+  try {
+    await updateGoogleAuth();
+    process.exit(0);
+  } catch (error) {
+    console.error("Authentication process failed:", error);
+    process.exit(1);
+  }
+}
+
+// Allow direct execution with: node google-auth.ts
+if (require.main === module) {
+  main();
+}
