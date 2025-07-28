@@ -50,16 +50,6 @@ export default function ChatInterface() {
   const handleFileSelect = (files: FileList | null) => {
     if (files) {
       const fileArray = Array.from(files);
-      const maxFileSize = 10 * 1024 * 1024; // 10MB limit per file
-      const oversizedFiles = fileArray.filter(file => file.size > maxFileSize);
-
-      if (oversizedFiles.length > 0) {
-        alert(
-          `The following files are too large (max 10MB): ${oversizedFiles.map(f => f.name).join(", ")}`
-        );
-        return;
-      }
-
       setAttachedFiles(prev => [...prev, ...fileArray]);
       console.log(
         "Files selected:",

@@ -30,6 +30,7 @@ export default function ChatInput({
 }: ChatInputProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [showPreviews, setShowPreviews] = useState(true);
+  const [isDragOver, setIsDragOver] = useState(false);
   const isLoading = status === "submitted" || status === "streaming";
 
   // Reset preview visibility when attachedFiles changes from parent
@@ -62,16 +63,81 @@ export default function ChatInput({
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    onFileSelect?.(files);
+    if (files && files.length > 0) {
+      const validFiles = validateFiles(files);
+      if (validFiles.length > 0) {
+        // Create a new FileList-like object with valid files
+        const dataTransfer = new DataTransfer();
+        validFiles.forEach(file => dataTransfer.items.add(file));
+        onFileSelect?.(dataTransfer.files);
+      }
+    }
     // Reset the input so the same file can be selected again
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
   };
 
+  const validateFiles = (files: FileList): File[] => {
+    const maxFileSize = 10 * 1024 * 1024; // 10MB limit per file
+    const validFiles: File[] = [];
+    const oversizedFiles: string[] = [];
+
+    Array.from(files).forEach(file => {
+      if (file.size > maxFileSize) {
+        oversizedFiles.push(file.name);
+      } else {
+        validFiles.push(file);
+      }
+    });
+
+    if (oversizedFiles.length > 0) {
+      alert(`The following files are too large (max 10MB): ${oversizedFiles.join(", ")}`);
+    }
+
+    return validFiles;
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(false);
+
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      const validFiles = validateFiles(files);
+      if (validFiles.length > 0) {
+        // Create a new FileList-like object with valid files
+        const dataTransfer = new DataTransfer();
+        validFiles.forEach(file => dataTransfer.items.add(file));
+        onFileSelect?.(dataTransfer.files);
+      }
+    }
+  };
+
   return (
     <div className="mb-4">
-      <form className="w-full overflow-hidden rounded-xl border bg-background shadow-sm focus-within:border-gray-700 transition-colors">
+      <form
+        className={cn(
+          "w-full overflow-hidden rounded-xl border bg-background shadow-sm transition-colors",
+          isDragOver ? "border-primary border-1 bg-primary/5" : "focus-within:border-gray-700"
+        )}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+      >
         <AIInputTextarea
           value={input}
           onChange={setInput}
