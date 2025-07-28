@@ -27,13 +27,29 @@ export default function ChatInput({
   status,
 }: ChatInputProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [showPreviews, setShowPreviews] = useState(true);
   const isLoading = status === "submitted" || status === "streaming";
+
+  // Reset preview visibility when attachedFiles changes from parent
+  useEffect(() => {
+    if (attachedFiles.length === 0) {
+      setShowPreviews(true);
+    }
+  }, [attachedFiles]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && (e.metaKey || e.ctrlKey) && !isLoading) {
       e.preventDefault();
-      onSend(e as React.FormEvent);
+      handleFormSubmit(e as React.FormEvent);
     }
+  };
+
+  const handleFormSubmit = (e: React.FormEvent) => {
+    // Hide previews immediately on submit
+    if (attachedFiles.length > 0) {
+      setShowPreviews(false);
+    }
+    onSend(e);
   };
 
   const handleFileButtonClick = () => {
@@ -56,7 +72,7 @@ export default function ChatInput({
           value={input}
           onChange={setInput}
           onKeyDown={handleKeyDown}
-          attachedFiles={attachedFiles}
+          attachedFiles={showPreviews ? attachedFiles : []}
           onRemoveFile={onRemoveFile}
         />
         <AIInputToolbar>
@@ -79,7 +95,7 @@ export default function ChatInput({
           </Button>
           <Button
             size="icon"
-            onClick={e => onSend(e)}
+            onClick={e => handleFormSubmit(e)}
             disabled={!input.trim() || isLoading}
             className="cursor-pointer"
           >
