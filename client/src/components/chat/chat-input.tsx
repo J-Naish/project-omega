@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useCallback, useEffect, KeyboardEventHandler } from "react";
+import { useRef, useCallback, useEffect, KeyboardEventHandler, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -156,6 +156,40 @@ const formatFileSize = (bytes: number) => {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
 };
 
+interface FileIconProps {
+  file: File;
+}
+
+function FileIcon({ file }: FileIconProps) {
+  const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const [imageError, setImageError] = useState(false);
+
+  useEffect(() => {
+    if (file.type.startsWith("image/")) {
+      const url = URL.createObjectURL(file);
+      setImageSrc(url);
+      return () => URL.revokeObjectURL(url);
+    }
+  }, [file]);
+
+  if (file.type.startsWith("image/") && imageSrc && !imageError) {
+    return (
+      <div className="relative">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={imageSrc}
+          alt={file.name}
+          className="h-8 w-8 rounded object-cover"
+          onError={() => setImageError(true)}
+        />
+      </div>
+    );
+  }
+
+  const IconComponent = getFileIcon(file);
+  return <IconComponent className="h-4 w-4 text-muted-foreground" />;
+}
+
 interface FilePreviewProps {
   files: File[];
   onRemoveFile?: (index: number) => void;
@@ -167,13 +201,12 @@ function FilePreview({ files, onRemoveFile }: FilePreviewProps) {
   return (
     <div className="flex flex-wrap gap-2 p-2">
       {files.map((file, index) => {
-        const IconComponent = getFileIcon(file);
         return (
           <div
             key={`${file.name}-${index}`}
             className="flex items-center gap-2 bg-muted/50 rounded-md px-3 py-2 text-sm"
           >
-            <IconComponent className="h-4 w-4 text-muted-foreground" />
+            <FileIcon file={file} />
             <div className="flex flex-col min-w-0">
               <span className="truncate max-w-32" title={file.name}>
                 {file.name}
