@@ -24,7 +24,12 @@ export function ContentPanel() {
   if (!currentContent) return null;
 
   return (
-    <Sidebar side="right" variant="floating" collapsible="none" className="w-96 bg-card">
+    <Sidebar
+      side="right"
+      variant="sidebar"
+      collapsible="offcanvas"
+      className="w-96 bg-card border-0"
+    >
       <PanelHeader title={currentContent.title} onCopy={handleCopy} onClose={closePanel} />
       <SidebarContent className="p-4">
         <Markdown>{currentContent.content}</Markdown>
