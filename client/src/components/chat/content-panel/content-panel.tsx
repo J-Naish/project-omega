@@ -3,8 +3,8 @@
 import { Sidebar, SidebarContent, useSidebar } from "@/components/ui/sidebar";
 import { useContentPanel } from "./content-panel-context";
 import { PanelHeader } from "./panel-header";
-import { ContentViewer } from "./content-viewer";
 import { useEffect } from "react";
+import Markdown from "../message/markdown";
 
 export function ContentPanel() {
   const { isOpen, currentContent, closePanel } = useContentPanel();
@@ -24,14 +24,10 @@ export function ContentPanel() {
   if (!currentContent) return null;
 
   return (
-    <Sidebar side="right" variant="floating" collapsible="offcanvas" className="w-96 duration-150">
+    <Sidebar side="right" variant="floating" collapsible="none" className="w-96 bg-card">
       <PanelHeader title={currentContent.title} onCopy={handleCopy} onClose={closePanel} />
       <SidebarContent className="p-4">
-        <ContentViewer
-          content={currentContent.content}
-          type={currentContent.type}
-          language={currentContent.language}
-        />
+        <Markdown>{currentContent.content}</Markdown>
       </SidebarContent>
     </Sidebar>
   );
