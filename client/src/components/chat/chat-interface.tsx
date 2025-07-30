@@ -3,8 +3,7 @@
 import { MessageArea } from "@/components/chat/message/message-area";
 import ChatInput from "@/components/chat/chat-input";
 import { useChatInterface } from "@/hooks/useChatInterface";
-import { ContentPanelProvider } from "@/components/chat/content-panel/content-panel-context";
-import { ContentPanel } from "@/components/chat/content-panel/content-panel";
+import { ContentPanelProvider, ContentPanel } from "@/components/chat/content-panel";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 
 /**

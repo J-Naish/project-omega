@@ -1,13 +1,13 @@
 "use client";
 
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useCallback } from "react";
 
-interface ContentPanelItem {
+export interface ContentPanelItem {
   id: string;
   title: string;
   content: string;
   type: "code" | "text" | "table" | "json";
-  language?: string; // for code blocks
+  language?: string;
 }
 
 interface ContentPanelContextType {
@@ -27,30 +27,32 @@ export function useContentPanel() {
   return context;
 }
 
-export function ContentPanelProvider({ children }: { children: React.ReactNode }) {
-  const [isOpen, setIsOpen] = useState(false);
+interface ContentPanelProviderProps {
+  children: React.ReactNode;
+}
+
+export function ContentPanelProvider({ children }: ContentPanelProviderProps) {
   const [currentContent, setCurrentContent] = useState<ContentPanelItem | null>(null);
 
-  const openContent = (item: ContentPanelItem) => {
-    setCurrentContent(item);
-    setIsOpen(true);
-  };
+  // Derive isOpen from currentContent to simplify state management
+  const isOpen = currentContent !== null;
 
-  const closePanel = () => {
-    setIsOpen(false);
+  const openContent = useCallback((item: ContentPanelItem) => {
+    setCurrentContent(item);
+  }, []);
+
+  const closePanel = useCallback(() => {
     setCurrentContent(null);
+  }, []);
+
+  const contextValue = {
+    isOpen,
+    currentContent,
+    openContent,
+    closePanel,
   };
 
   return (
-    <ContentPanelContext.Provider
-      value={{
-        isOpen,
-        currentContent,
-        openContent,
-        closePanel,
-      }}
-    >
-      {children}
-    </ContentPanelContext.Provider>
+    <ContentPanelContext.Provider value={contextValue}>{children}</ContentPanelContext.Provider>
   );
 }

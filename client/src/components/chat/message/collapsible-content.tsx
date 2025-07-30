@@ -1,14 +1,9 @@
 import React from "react";
 import { ChevronRight, Code, FileText, Table, Braces } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useContentPanel } from "../content-panel/content-panel-context";
+import { useContentPanel, type ContentPanelItem } from "../content-panel";
 
-interface CollapsibleContentProps {
+interface CollapsibleContentProps extends Omit<ContentPanelItem, "id"> {
   id: string;
-  title: string;
-  content: string;
-  type: "code" | "text" | "table" | "json";
-  language?: string;
   summary?: string;
   preview?: string;
 }
@@ -61,27 +56,24 @@ export function CollapsibleContent({
   };
 
   return (
-    <div className="my-4 p-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900/50">
-      <Button
-        variant="ghost"
-        onClick={handleClick}
-        className="w-full justify-start p-0 h-auto text-left hover:bg-transparent"
-      >
-        <div className="flex items-center gap-3 w-full">
-          <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 min-w-0">
-            {getIcon()}
-            <span className="font-medium">{getTypeLabel()}</span>
-            <span className="text-xs">•</span>
-            <span className="truncate">{title}</span>
-          </div>
-          <ChevronRight className="w-4 h-4 text-gray-400 ml-auto flex-shrink-0" />
+    <div
+      className="my-4 px-4 py-3 border rounded-lg cursor-pointer gap-2 bg-card text-card-foreground"
+      onClick={handleClick}
+    >
+      <div className="flex items-center gap-4 w-full">
+        <div className="flex items-center gap-3 text-sm min-w-0">
+          {getIcon()}
+          <span className="font-medium">{getTypeLabel()}</span>
+          <span className="text-xs text-gray-400">•</span>
+          <span className="truncate">{title}</span>
         </div>
-      </Button>
+        <ChevronRight className="w-4 h-4 text-gray-400 ml-auto flex-shrink-0" />
+      </div>
 
-      {summary && <p className="text-sm text-gray-600 dark:text-gray-400 mt-2 ml-0">{summary}</p>}
+      {summary && <p className="text-sm mt-3 px-0 text-muted-foreground">{summary}</p>}
 
       {preview && (
-        <div className="mt-2 p-2 bg-white dark:bg-gray-800 rounded border text-xs text-gray-500 dark:text-gray-400 font-mono overflow-hidden">
+        <div className="mt-3 px-3 py-2rounded font-mono text-xs overflow-hidden">
           <div className="line-clamp-2">{preview}</div>
         </div>
       )}
