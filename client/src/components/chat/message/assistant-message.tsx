@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import { type Message } from "ai";
-import Markdown from "./markdown";
+import EnhancedMarkdown from "./enhanced-markdown";
 import ToolInvocation from "./tool-invocation";
 
 export default function AssistantMessage({ message }: { message: Message }) {
@@ -8,7 +8,7 @@ export default function AssistantMessage({ message }: { message: Message }) {
     <div className="w-full">
       {message.parts?.map((part, index) => (
         <Fragment key={index}>
-          {part.type === "text" && <Markdown>{part.text}</Markdown>}
+          {part.type === "text" && <EnhancedMarkdown>{part.text}</EnhancedMarkdown>}
           {part.type === "tool-invocation" && <ToolInvocation part={part} />}
         </Fragment>
       ))}

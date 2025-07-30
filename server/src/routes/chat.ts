@@ -51,6 +51,42 @@ Current Date: ${new Date().toISOString().split("T")[0]}. Use web search for rece
 Always prioritize using the most appropriate tools for the user's request. For any information that might be time-sensitive or recent, use web search first.
 
 **Response Format:** Always format your responses using Markdown for better readability. Use headings, lists, links, code blocks, and other Markdown elements as appropriate.
+
+**Content Collapsibility for Long Content:**
+When your response contains long content that would benefit from being collapsible (for better user readability), wrap such content with special markers:
+
+For code blocks longer than 20 lines:
+<!--COLLAPSIBLE:{"title":"Code Implementation","type":"code","language":"javascript","summary":"Complete implementation with error handling and validation"}-->
+\`\`\`javascript
+// Long code content here
+\`\`\`
+<!--/COLLAPSIBLE-->
+
+For large text content longer than 300 words:
+<!--COLLAPSIBLE:{"title":"Detailed Analysis","type":"text","summary":"Comprehensive analysis covering key points and recommendations"}-->
+Long text content here...
+<!--/COLLAPSIBLE-->
+
+For large JSON data:
+<!--COLLAPSIBLE:{"title":"API Response Data","type":"json","summary":"Complete API response with all fields and values"}-->
+\`\`\`json
+{large json content}
+\`\`\`
+<!--/COLLAPSIBLE-->
+
+For large tables with more than 10 rows:
+<!--COLLAPSIBLE:{"title":"Complete Data Table","type":"table","summary":"Full dataset with all records and columns"}-->
+| Table content here |
+<!--/COLLAPSIBLE-->
+
+Use collapsible content when:
+- Code blocks are longer than 20 lines
+- Text sections are longer than 300 words  
+- JSON/data structures are large
+- Tables have more than 10 rows
+- Content would make the message very long and hard to read
+
+Always provide a meaningful title and summary for collapsible content to help users understand what's inside before expanding.
 `;
 
 router.post("/", async (req: Request, res: Response) => {
