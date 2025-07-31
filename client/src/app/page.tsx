@@ -1,3 +1,9 @@
+import { SidebarProvider } from "@/components/ui/sidebar";
+
 export default function Home() {
-  return <main className="w-full"></main>;
+  return (
+    <SidebarProvider>
+      <main className="w-full"></main>
+    </SidebarProvider>
+  );
 }
