@@ -1,5 +1,6 @@
-import { SidebarProvider, Sidebar } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import Chat from "@/components/chat/chat";
+import ContentPanel from "@/components/content-panel/content-panel";
 
 export default function Home() {
   return (
@@ -7,7 +8,7 @@ export default function Home() {
       <main className="w-full flex justify-center px-6">
         <Chat />
       </main>
-      <Sidebar side="right"></Sidebar>
+      <ContentPanel />
     </SidebarProvider>
   );
 }
