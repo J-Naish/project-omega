@@ -17,7 +17,7 @@ export default function Chat() {
     <div className="w-full max-w-6xl flex flex-col">
       <div className="flex-1">{/* Message Area */}</div>
       <div className="sticky bottom-0 pb-6">
-        <form className="border rounded-2xl">
+        <form className="rounded-2xl border focus-within:border-1 focus-within:border-blue-500 transition-all">
           <div>
             <ChatInput.FilePreview files={files} onRemoveFile={() => {}} />
             <ChatInput.Textarea value={input} onChange={e => setInput(e.target.value)} />
