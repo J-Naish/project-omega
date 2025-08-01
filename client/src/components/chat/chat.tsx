@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { Button } from "@/components/ui/button";
+import { Sidebar, useSidebar } from "@/components/ui/sidebar";
 import InputBox from "./input-box/input-box";
 
 export default function Chat() {
@@ -8,6 +10,8 @@ export default function Chat() {
   const [files, setFiles] = useState<File[]>([]);
 
   const fileInputRef = useRef(null);
+
+  const { toggleSidebar } = useSidebar();
 
   return (
     <div className="w-full max-w-6xl flex flex-col">
@@ -24,6 +28,10 @@ export default function Chat() {
           onSubmit={() => {}}
         />
       </div>
+      <Button onClick={toggleSidebar} className="fixed top-0 left-0">
+        Sidebar
+      </Button>
+      <Sidebar side="right" collapsible="offcanvas" variant="sidebar"></Sidebar>
     </div>
   );
 }
