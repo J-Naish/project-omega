@@ -108,7 +108,7 @@ export interface FilePreviewProps {
 /**
  * File preview container component
  */
-export function FilePreview({ files, onRemoveFile }: FilePreviewProps) {
+export default function FilePreview({ files, onRemoveFile }: FilePreviewProps) {
   if (files.length === 0) return null;
 
   return (
