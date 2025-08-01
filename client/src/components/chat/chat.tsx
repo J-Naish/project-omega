@@ -14,9 +14,9 @@ export default function Chat() {
   const { toggleSidebar } = useSidebar();
 
   return (
-    <div className="w-full max-w-6xl flex flex-col bg-yellow-50">
+    <div className="w-full max-w-6xl flex flex-col">
       <div className="flex-1">{/* Message Area */}</div>
-      <div className="sticky bottom-0 pb-6 bg-pink-50">
+      <div className="sticky bottom-0 pb-6">
         <InputBox
           input={input}
           files={files}
