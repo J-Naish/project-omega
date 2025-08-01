@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useCallback, useEffect, KeyboardEventHandler } from "react";
-import { Textarea } from "@/components/ui/textarea";
+import { Textarea as TextareaComponent } from "@/components/ui/textarea";
 
 function useAutoResizeTextarea({ minHeight, maxHeight }: { minHeight: number; maxHeight: number }) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -43,10 +43,7 @@ function useAutoResizeTextarea({ minHeight, maxHeight }: { minHeight: number; ma
   return { textareaRef, adjustHeight };
 }
 
-export default function ChatTextarea({
-  onChange,
-  ...props
-}: React.ComponentProps<typeof Textarea>) {
+export function Textarea({ onChange, ...props }: React.ComponentProps<typeof TextareaComponent>) {
   const { textareaRef, adjustHeight } = useAutoResizeTextarea({
     minHeight: 64,
     maxHeight: 400,
@@ -63,7 +60,7 @@ export default function ChatTextarea({
   };
 
   return (
-    <Textarea
+    <TextareaComponent
       className="w-full resize-none rounded-none border-none p-4 shadow-none outline-none ring-0 bg-transparent focus-visible:ring-0"
       style={{
         scrollbarWidth: "thin",

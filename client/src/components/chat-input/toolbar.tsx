@@ -4,37 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Send, Paperclip } from "lucide-react";
 
-interface ChatInputToolbarProps {
-  fileInputRef: React.RefObject<HTMLInputElement | null>;
-  onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onFileButtonClick: () => void;
-  onSubmit: (e: React.FormEvent) => void;
-  input: string;
-  status: "submitted" | "streaming" | "ready" | "error";
+export function Toolbar({ children }: { children: React.ReactNode }) {
+  return <div className="flex items-center justify-between px-4 py-4">{children}</div>;
 }
 
-export default function ChatToolbar({
-  fileInputRef,
-  onFileChange,
-  onFileButtonClick,
-  onSubmit,
-  input,
-  status,
-}: ChatInputToolbarProps) {
-  return (
-    <div className="flex items-center justify-between px-4 py-4">
-      <FileInput
-        fileInputRef={fileInputRef}
-        onFileChange={onFileChange}
-        onFileButtonClick={onFileButtonClick}
-        status={status}
-      />
-      <SendButton onSubmit={onSubmit} input={input} status={status} />
-    </div>
-  );
-}
-
-function FileInput({
+export function FileInput({
   fileInputRef,
   onFileChange,
   onFileButtonClick,
@@ -70,7 +44,7 @@ function FileInput({
   );
 }
 
-function SendButton({
+export function SendButton({
   onSubmit,
   input,
   status,

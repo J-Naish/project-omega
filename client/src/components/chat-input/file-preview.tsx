@@ -100,7 +100,7 @@ function FileItemPreview({ file, index, onRemove }: FileItemPreviewProps) {
   }
 }
 
-export interface FilePreviewProps {
+interface FilePreviewProps {
   files: File[];
   onRemoveFile: (index: number) => void;
 }
@@ -108,7 +108,7 @@ export interface FilePreviewProps {
 /**
  * File preview container component
  */
-export default function FilePreview({ files, onRemoveFile }: FilePreviewProps) {
+export function FilePreview({ files, onRemoveFile }: FilePreviewProps) {
   if (files.length === 0) return null;
 
   return (
