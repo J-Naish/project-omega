@@ -1,5 +1,9 @@
-import { Sidebar } from "@/components/ui/sidebar";
+import { Sidebar, SidebarRail } from "@/components/ui/sidebar";
 
 export default function ContentPanel() {
-  return <Sidebar side="right"></Sidebar>;
+  return (
+    <Sidebar side="right">
+      <SidebarRail />
+    </Sidebar>
+  );
 }
