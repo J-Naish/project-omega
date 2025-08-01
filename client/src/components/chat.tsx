@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { useSidebar } from "@/components/ui/sidebar";
-import InputBox from "./input-box/input-box";
+import ChatInput from "./chat-input/chat-input";
 
 export default function Chat() {
   const [input, setInput] = useState("");
@@ -17,7 +17,7 @@ export default function Chat() {
     <div className="w-full max-w-6xl flex flex-col">
       <div className="flex-1">{/* Message Area */}</div>
       <div className="sticky bottom-0 pb-6">
-        <InputBox
+        <ChatInput
           input={input}
           files={files}
           fileInputRef={fileInputRef}

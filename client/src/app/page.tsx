@@ -1,5 +1,5 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
-import Chat from "@/components/chat/chat";
+import Chat from "@/components/chat";
 import ContentPanel from "@/components/content-panel/content-panel";
 
 export default function Home() {

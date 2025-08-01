@@ -15,7 +15,7 @@ interface InputBoxProps {
   status: "submitted" | "streaming" | "ready" | "error";
 }
 
-export default function InputBox({
+export default function ChatInput({
   input,
   files,
   onRemoveFile,
