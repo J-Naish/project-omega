@@ -27,7 +27,6 @@ export default function Chat() {
               fileInputRef={fileInputRef}
               onFileChange={() => {}}
               onFileButtonClick={() => {}}
-              status="submitted"
             />
             <ChatInput.SendButton onSubmit={() => {}} input={input} status="submitted" />
           </ChatInput.Toolbar>

@@ -12,14 +12,11 @@ export function FileInput({
   fileInputRef,
   onFileChange,
   onFileButtonClick,
-  status,
 }: {
   fileInputRef: React.RefObject<HTMLInputElement | null>;
   onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onFileButtonClick: () => void;
-  status: "submitted" | "streaming" | "ready" | "error";
 }) {
-  const isLoading = status === "submitted" || status === "streaming";
   return (
     <>
       <Input
@@ -36,7 +33,6 @@ export function FileInput({
         onClick={onFileButtonClick}
         type="button"
         className="cursor-pointer border"
-        disabled={isLoading}
       >
         <Paperclip />
       </Button>
