@@ -26,7 +26,7 @@ export default function InputBox({
   status,
 }: InputBoxProps) {
   return (
-    <form>
+    <form className="border rounded-2xl">
       <div>
         <FilePreview files={files} onRemoveFile={onRemoveFile} />
         <ChatTextarea value={input} />
