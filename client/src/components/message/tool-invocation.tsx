@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useCallback } from "react";
 import Image from "next/image";
 import { type UIMessage } from "ai";
 import { Card } from "@/components/ui/card";
@@ -54,17 +54,14 @@ function ExternalToolInvocation({ part }: { part: NonNullable<UIMessage["parts"]
 function InternalToolInvocation({ title, content }: { title: string; content: string }) {
   const { setOpen, setContent } = useContentPanel();
 
-  const handleClick = () => {
-    setOpen(true);
-  };
-
-  useEffect(() => {
+  const handleClick = useCallback(() => {
     setContent({
       type: "text",
       title: title,
       content: content,
     });
-  });
+    setOpen(true);
+  }, [title, content, setContent, setOpen]);
 
   return (
     <Card className="p-4 my-4 cursor-pointer" onClick={handleClick}>

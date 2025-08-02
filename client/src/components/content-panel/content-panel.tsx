@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,7 +10,6 @@ import {
   SidebarContent,
   useSidebar,
 } from "@/components/ui/sidebar";
-import Markdown from "../markdown";
 
 interface CodeContent {
   type: "code";
@@ -38,14 +37,47 @@ interface ToolContent {
 
 type Content = CodeContent | TextContent | FileContent | ToolContent;
 
-export function useContentPanel() {
-  const [content, setContent] = useState<Content | null>(null);
+class ContentPanelStore {
+  private content: Content | null = null;
+  private listeners = new Set<() => void>();
 
+  getContent = () => this.content;
+
+  setContent = (newContent: Content | null) => {
+    if (this.content !== newContent) {
+      this.content = newContent;
+      this.notifyListeners();
+    }
+  };
+
+  subscribe = (listener: () => void) => {
+    this.listeners.add(listener);
+    return () => this.listeners.delete(listener);
+  };
+
+  private notifyListeners = () => {
+    this.listeners.forEach(listener => listener());
+  };
+}
+
+const contentPanelStore = new ContentPanelStore();
+
+export function useContentPanel() {
   const { open, setOpen } = useSidebar();
 
-  const toggle = () => {
+  const content = useSyncExternalStore(
+    contentPanelStore.subscribe,
+    contentPanelStore.getContent,
+    contentPanelStore.getContent
+  );
+
+  const setContent = useCallback((newContent: Content | null) => {
+    contentPanelStore.setContent(newContent);
+  }, []);
+
+  const toggle = useCallback(() => {
     setOpen(!open);
-  };
+  }, [open, setOpen]);
 
   return {
     content,
@@ -70,7 +102,7 @@ export default function ContentPanel() {
         </div>
       </SidebarHeader>
       <SidebarContent className="px-8 pb-8">
-        {content && content.type !== "file" && <Markdown>{content.content}</Markdown>}
+        {content && content.type !== "file" && <>{content.content}</>}
       </SidebarContent>
       <SidebarRail />
     </Sidebar>
