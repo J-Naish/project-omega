@@ -109,11 +109,11 @@ function A({ href, children }: { href?: string; children: React.ReactNode }) {
 }
 
 function Ul({ children }: { children: React.ReactNode }) {
-  return <ul className="list-disc pl-6 space-y-1">{children}</ul>;
+  return <ul className="list-disc pl-6 space-y-1 mb-4">{children}</ul>;
 }
 
 function Ol({ children }: { children: React.ReactNode }) {
-  return <ol className="list-decimal pl-6 space-y-1">{children}</ol>;
+  return <ol className="list-decimal pl-6 space-y-1 mb-4">{children}</ol>;
 }
 
 function Li({ children }: { children: React.ReactNode }) {
