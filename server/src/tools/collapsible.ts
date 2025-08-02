@@ -3,7 +3,7 @@ import { z } from "zod";
 
 export const collapsible = tool({
   description:
-    "Create collapsible content sections for the side panel. Use this tool to mark long content, code snippets, detailed explanations, or any content that would benefit from being collapsed in the main chat and expanded in a side panel.",
+    "Create collapsible content sections for the side panel. Use this tool to mark long code snippets or any content that would benefit from being collapsed in the main chat and expanded in a side panel. do not use this tool for raw texts unless the user requires so.",
   parameters: z.object({
     type: z
       .enum(["code", "text", "list", "table", "explanation", "output"])
@@ -34,25 +34,21 @@ export const collapsible = tool({
 
 export const collapsibleDescription = `
 **Collapsible Content Tool:**
-- Creates collapsible sections for long content, code snippets, and detailed explanations
+- Creates collapsible sections for very long content and code snippets
 - Content is summarized in the main chat with option to expand in side panel
-- Supports multiple content types: code, text, lists, tables, explanations, and outputs
+- Supports multiple content types: code, text, lists, tables,, and outputs
 - Provides syntax highlighting for code and metadata for additional context
 `;
 
 export const collapsibleUsage = `
 **When to use Collapsible:**
 - Long code snippets or files (>10 lines)
-- Detailed technical explanations or documentation
 - Large data outputs or tables
-- Multi-step instructions or processes
 - Any content that would make the main chat too long or cluttered
 - Configuration files, logs, or structured data
 
 **Example usage:**
 - Code implementations with line counts >15
 - Database query results with many rows
-- Step-by-step guides or tutorials
 - API documentation or specifications
-- Error logs or debugging information
 `;
