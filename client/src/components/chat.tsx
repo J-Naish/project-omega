@@ -47,7 +47,7 @@ export default function Chat() {
         <div className="flex-1">
           <MessageArea messages={messages} status={status} error={error} onRetry={reload} />
         </div>
-        <div className="sticky bottom-0 pb-6">
+        <div className="sticky bottom-0 pb-6 bg-background">
           <form
             className={cn(
               "rounded-2xl border focus-within:border-1 focus-within:border-blue-800 transition-all relative bg-input",
