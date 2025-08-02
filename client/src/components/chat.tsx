@@ -1,17 +1,21 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { useChat } from "@ai-sdk/react";
 import { Button } from "@/components/ui/button";
 import { useSidebar } from "@/components/ui/sidebar";
 import ChatInput from "./chat-input";
 
 export default function Chat() {
-  const [input, setInput] = useState("");
   const [files, setFiles] = useState<File[]>([]);
 
   const fileInputRef = useRef(null);
 
   const { toggleSidebar } = useSidebar();
+
+  const { input, handleSubmit, status, handleInputChange } = useChat({
+    api: "http://localhost:8080/chat",
+  });
 
   return (
     <div className="w-full max-w-6xl flex flex-col">
@@ -20,7 +24,7 @@ export default function Chat() {
         <form className="rounded-2xl border focus-within:border-1 focus-within:border-blue-500 transition-all">
           <div>
             <ChatInput.FilePreview files={files} onRemoveFile={() => {}} />
-            <ChatInput.Textarea value={input} onChange={e => setInput(e.target.value)} />
+            <ChatInput.Textarea value={input} onChange={handleInputChange} />
           </div>
           <ChatInput.Toolbar>
             <ChatInput.FileInput
@@ -28,7 +32,7 @@ export default function Chat() {
               onFileChange={() => {}}
               onFileButtonClick={() => {}}
             />
-            <ChatInput.SendButton onSubmit={() => {}} input={input} status="submitted" />
+            <ChatInput.SendButton onSubmit={handleSubmit} input={input} status={status} />
           </ChatInput.Toolbar>
         </form>
       </div>
