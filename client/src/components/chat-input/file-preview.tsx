@@ -9,7 +9,7 @@ import { X, File } from "lucide-react";
 interface FileItemPreviewProps {
   file: File;
   index: number;
-  onRemove: (index: number) => void;
+  onRemove?: (index: number) => void;
 }
 
 interface MessageAttachment {
@@ -53,15 +53,17 @@ function ImageFilePreview({ file, index, onRemove }: FileItemPreviewProps) {
           {file.name || "Image"}
         </span>
       </div>
-      <Button
-        type="button"
-        variant="ghost"
-        size="icon"
-        className="absolute top-1 right-1 h-6 w-6 p-0 hover:bg-destructive/10 hover:text-destructive cursor-pointer bg-black/20"
-        onClick={() => onRemove(index)}
-      >
-        <X className="h-4 w-4" />
-      </Button>
+      {onRemove && (
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="absolute top-1 right-1 h-6 w-6 p-0 hover:bg-destructive/10 hover:text-destructive cursor-pointer bg-black/20"
+          onClick={() => onRemove(index)}
+        >
+          <X className="h-4 w-4" />
+        </Button>
+      )}
     </div>
   );
 }
@@ -79,15 +81,17 @@ function TextFilePreview({ file, index, onRemove }: FileItemPreviewProps) {
         </div>
       </div>
       <div className="absolute inset-0 rounded-md pointer-events-none border-1 border-white/20" />
-      <Button
-        type="button"
-        variant="ghost"
-        size="icon"
-        className="absolute top-1 right-1 h-6 w-6 p-0 hover:bg-destructive/10 hover:text-destructive cursor-pointer"
-        onClick={() => onRemove(index)}
-      >
-        <X className="h-4 w-4" />
-      </Button>
+      {onRemove && (
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="absolute top-1 right-1 h-6 w-6 p-0 hover:bg-destructive/10 hover:text-destructive cursor-pointer"
+          onClick={() => onRemove(index)}
+        >
+          <X className="h-4 w-4" />
+        </Button>
+      )}
     </div>
   );
 }
