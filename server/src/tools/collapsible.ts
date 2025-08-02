@@ -8,23 +8,19 @@ export const collapsible = tool({
     type: z
       .enum(["code", "text", "list", "table", "explanation", "output"])
       .describe("The type of collapsible content"),
-    summary: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("A brief summary that will be shown in the main chat"),
+    title: z.string().min(1).max(100).describe("A brief title that will be shown in the main chat"),
     content: z
       .string()
       .min(1)
       .describe("The full content that will be displayed in the side panel"),
   }),
-  execute: async ({ type, summary, content }) => {
+  execute: async ({ type, title, content }) => {
     const collapsibleId = `collapsible_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
 
     const response = {
       id: collapsibleId,
       type,
-      summary,
+      title,
       content,
     };
 
