@@ -24,9 +24,14 @@ export default function Chat() {
   const isLoading = status === "submitted" || status === "streaming";
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && (e.metaKey || e.ctrlKey) && !isLoading) {
-      e.preventDefault();
-      handleSubmit();
+    if (e.key === "Enter") {
+      if (e.nativeEvent.isComposing || e.shiftKey) {
+        return;
+      }
+      if (!isLoading) {
+        e.preventDefault();
+        handleSubmit();
+      }
     }
   };
 
