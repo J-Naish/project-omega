@@ -556,4 +556,5 @@ export const googleSheetsUsage = `
 - Use googleSheets with action="format_as_table" to read data in a structured table format
 - Spreadsheet IDs are required for most operations - get them from Google Sheets URLs
 - Range format: 'SheetName!A1:D10' or 'SheetName' for entire sheet
+- [IMPORTANT] If you cannot specify what Google Spreadsheet to manage, use the googleDrive tool first.
 `;
