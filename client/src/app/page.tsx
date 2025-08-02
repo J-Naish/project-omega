@@ -5,7 +5,7 @@ import ContentPanel from "@/components/content-panel/content-panel";
 export default function Home() {
   return (
     <SidebarProvider defaultOpen={false}>
-      <main className="w-full flex justify-center px-6">
+      <main className="w-full flex justify-center">
         <Chat />
       </main>
       <ContentPanel />
