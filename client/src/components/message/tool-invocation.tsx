@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { type Message } from "ai";
+import { type UIMessage } from "ai";
 import Markdown from "../markdown";
 
 function formatJSON(jsonString: string): string {
@@ -11,7 +11,11 @@ function formatJSON(jsonString: string): string {
   }
 }
 
-export default function ToolInvocation({ part }: { part: NonNullable<Message["parts"]>[number] }) {
+export default function ToolInvocation({
+  part,
+}: {
+  part: NonNullable<UIMessage["parts"]>[number];
+}) {
   if (part.type !== "tool-invocation") return null;
 
   const { toolName, state, args } = part.toolInvocation;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { type Message } from "ai";
+import { type UIMessage } from "ai";
 import UserMessage from "./user-message";
 import AssistantMessage from "./assistant-message";
 import Spinner from "./spinner";
@@ -13,7 +13,7 @@ export default function MessageArea({
   error,
   onRetry,
 }: {
-  messages: Message[];
+  messages: UIMessage[];
   status: "submitted" | "streaming" | "ready" | "error";
   error?: Error;
   onRetry?: () => void;
