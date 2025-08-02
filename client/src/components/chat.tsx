@@ -38,7 +38,7 @@ export default function Chat() {
       onDragOver={handleDragOver}
       onDrop={handleDrop}
     >
-      <div className="w-full max-w-6xl flex flex-col px-6">
+      <div className="w-full max-w-4xl flex flex-col px-6">
         <div className="flex-1">
           <MessageArea messages={messages} status={status} error={error} onRetry={reload} />
         </div>
