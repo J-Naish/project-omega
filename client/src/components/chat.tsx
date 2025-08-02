@@ -7,11 +7,10 @@ import { useSidebar } from "@/components/ui/sidebar";
 import ChatInput from "./chat-input";
 import MessageArea from "./message/message-area";
 import { cn } from "@/lib/utils";
+import { useDragAndDropFile } from "@/hooks/use-drag-and-drop-file";
 
 export default function Chat() {
   const [files, setFiles] = useState<File[]>([]);
-  const [dragCounter, setDragCounter] = useState(0);
-  const isDragging = dragCounter > 0;
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -32,33 +31,8 @@ export default function Chat() {
     setFiles(files.filter((_, i) => i !== index));
   };
 
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-  };
-
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragCounter(0);
-
-    const files = Array.from(e.dataTransfer.files);
-    if (files.length > 0) {
-      setFiles(prevFiles => [...prevFiles, ...files]);
-    }
-  };
-
-  const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragCounter(prev => prev + 1);
-  };
-
-  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragCounter(prev => prev - 1);
-  };
+  const { handleDragEnter, handleDragLeave, handleDragOver, handleDrop, isDragging } =
+    useDragAndDropFile({ setFiles });
 
   return (
     <div
