@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { type Message } from "ai";
+import Markdown from "../markdown";
 
 function formatJSON(jsonString: string): string {
   try {
@@ -30,9 +31,7 @@ export default function ToolInvocation({ part }: { part: NonNullable<Message["pa
           <div className="mt-2 pl-8 text-xs text-muted-foreground">
             <details className="cursor-pointer">
               <summary>View result</summary>
-              <pre className="mt-1 text-xs bg-muted p-2 rounded overflow-x-auto">
-                {formatJSON(part.toolInvocation.result)}
-              </pre>
+              <Markdown>{`\`\`\`JSON\n${formatJSON(part.toolInvocation.result)}\n\`\`\``}</Markdown>
             </details>
           </div>
         )}
