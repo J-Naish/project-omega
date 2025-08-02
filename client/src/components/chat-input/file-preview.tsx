@@ -106,7 +106,7 @@ function FileItemPreview({ file, index, onRemove }: FileItemPreviewProps) {
 
 interface FilePreviewProps {
   files: File[];
-  onRemoveFile: (index: number) => void;
+  onRemoveFile?: (index: number) => void;
 }
 
 /**
