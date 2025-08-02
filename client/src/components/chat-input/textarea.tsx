@@ -61,7 +61,7 @@ export function Textarea({ onChange, ...props }: React.ComponentProps<typeof Tex
 
   return (
     <TextareaComponent
-      className="w-full resize-none rounded-none border-none p-4 shadow-none outline-none ring-0 bg-transparent focus-visible:ring-0"
+      className="w-full resize-none rounded-none border-none p-4 shadow-none outline-none ring-0 focus-visible:ring-0"
       style={{
         scrollbarWidth: "thin",
         scrollbarColor: "var(--muted-foreground) transparent",
