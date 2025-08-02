@@ -11,11 +11,11 @@ export function Toolbar({ children }: { children: React.ReactNode }) {
 export function FileInput({
   fileInputRef,
   onFileChange,
-  onFileButtonClick,
+  onClick,
 }: {
   fileInputRef: React.RefObject<HTMLInputElement | null>;
   onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onFileButtonClick: () => void;
+  onClick: () => void;
 }) {
   return (
     <>
@@ -30,7 +30,7 @@ export function FileInput({
       <Button
         variant="ghost"
         size="icon"
-        onClick={onFileButtonClick}
+        onClick={onClick}
         type="button"
         className="cursor-pointer border"
       >
