@@ -18,9 +18,9 @@ export default function Chat() {
   });
 
   const handleFileChange = () => {
-    const files = fileInputRef.current?.files;
-    if (files) {
-      setFiles(Array.from(files));
+    const newFiles = fileInputRef.current?.files;
+    if (newFiles) {
+      setFiles(prevFiles => [...prevFiles, ...Array.from(newFiles)]);
     }
   };
 
