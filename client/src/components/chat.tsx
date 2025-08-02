@@ -65,7 +65,7 @@ export default function Chat() {
                 onChange={handleFileChange}
                 onClick={() => fileInputRef.current?.click()}
               />
-              <ChatInput.SendButton onSubmit={handleSubmit} input={input} status={status} />
+              <ChatInput.SendButton onClick={handleSubmit} input={input} status={status} />
             </ChatInput.Toolbar>
           </form>
         </div>

@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Send, Paperclip } from "lucide-react";
+import { Paperclip } from "lucide-react";
 
 export function Toolbar({ children }: { children: React.ReactNode }) {
   return <div className="flex items-center justify-between px-4 py-4">{children}</div>;
@@ -37,27 +37,5 @@ export function FileInput({
         <Paperclip />
       </Button>
     </>
-  );
-}
-
-export function SendButton({
-  onSubmit,
-  input,
-  status,
-}: {
-  onSubmit: (e: React.FormEvent) => void;
-  input: string;
-  status: "submitted" | "streaming" | "ready" | "error";
-}) {
-  const isLoading = status === "submitted" || status === "streaming";
-  return (
-    <Button
-      size="icon"
-      onClick={onSubmit}
-      disabled={!input.trim() || isLoading}
-      className="cursor-pointer"
-    >
-      <Send className="w-4 h-4" />
-    </Button>
   );
 }
