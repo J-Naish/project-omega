@@ -1,6 +1,11 @@
+"use client";
+
+import { useEffect } from "react";
 import Image from "next/image";
 import { type UIMessage } from "ai";
+import { Card } from "@/components/ui/card";
 import Markdown from "../markdown";
+import { useContentPanel } from "../content-panel/content-panel";
 
 function formatJSON(jsonString: string): string {
   try {
@@ -11,11 +16,13 @@ function formatJSON(jsonString: string): string {
   }
 }
 
-export default function ToolInvocation({
-  part,
-}: {
-  part: NonNullable<UIMessage["parts"]>[number];
-}) {
+const internalTools = ["collapsible"] as const;
+type InternalTools = (typeof internalTools)[number];
+
+const externalTools = ["webSearch", "slack", "notion", "googleDrive", "googleSheets"] as const;
+type ExternalTools = (typeof externalTools)[number];
+
+function ExternalToolInvocation({ part }: { part: NonNullable<UIMessage["parts"]>[number] }) {
   if (part.type !== "tool-invocation") return null;
 
   const { toolName, state, args } = part.toolInvocation;
@@ -42,6 +49,51 @@ export default function ToolInvocation({
       </div>
     </div>
   );
+}
+
+function InternalToolInvocation({ title, content }: { title: string; content: string }) {
+  const { setOpen, setContent } = useContentPanel();
+
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  useEffect(() => {
+    setContent({
+      type: "text",
+      title: title,
+      content: content,
+    });
+  });
+
+  return (
+    <Card className="p-4 my-4 cursor-pointer" onClick={handleClick}>
+      {title}
+    </Card>
+  );
+}
+
+export default function ToolInvocation({
+  part,
+}: {
+  part: NonNullable<UIMessage["parts"]>[number];
+}) {
+  if (part.type !== "tool-invocation") return null;
+
+  const { toolName } = part.toolInvocation;
+
+  if (externalTools.includes(toolName as ExternalTools)) {
+    return <ExternalToolInvocation part={part} />;
+  } else if (internalTools.includes(toolName as InternalTools)) {
+    if (!part.toolInvocation.args) return null;
+    const args = part.toolInvocation.args;
+    const title = args?.title;
+    const content = args?.content;
+    console.log(content);
+    return <InternalToolInvocation title={title} content={content} />;
+  } else {
+    return null;
+  }
 }
 
 function Head({
