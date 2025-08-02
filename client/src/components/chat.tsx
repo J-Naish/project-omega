@@ -17,8 +17,8 @@ export default function Chat() {
     api: "http://localhost:8080/chat",
   });
 
-  const handleFileChange = () => {
-    const newFiles = fileInputRef.current?.files;
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newFiles = e.target.files;
     if (newFiles) {
       setFiles(prevFiles => [...prevFiles, ...Array.from(newFiles)]);
     }
@@ -40,7 +40,7 @@ export default function Chat() {
           <ChatInput.Toolbar>
             <ChatInput.FileInput
               fileInputRef={fileInputRef}
-              onFileChange={handleFileChange}
+              onChange={handleFileChange}
               onClick={() => fileInputRef.current?.click()}
             />
             <ChatInput.SendButton onSubmit={handleSubmit} input={input} status={status} />

@@ -10,11 +10,11 @@ export function Toolbar({ children }: { children: React.ReactNode }) {
 
 export function FileInput({
   fileInputRef,
-  onFileChange,
+  onChange,
   onClick,
 }: {
   fileInputRef: React.RefObject<HTMLInputElement | null>;
-  onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onClick: () => void;
 }) {
   return (
@@ -22,7 +22,7 @@ export function FileInput({
       <Input
         ref={fileInputRef}
         type="file"
-        onChange={onFileChange}
+        onChange={onChange}
         className="hidden"
         multiple
         accept={".pdf,.txt,.md,.doc,.docx,.rtf,.csv,.json,.xml,.html,.htm,image/*"}
