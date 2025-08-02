@@ -3,20 +3,20 @@
 import { useState } from "react";
 import { useChat } from "@ai-sdk/react";
 import { Button } from "@/components/ui/button";
-import { useSidebar } from "@/components/ui/sidebar";
 import ChatInput from "./chat-input";
 import MessageArea from "./message/message-area";
 import { cn } from "@/lib/utils";
 import { useDragAndDropFile } from "@/hooks/use-drag-and-drop-file";
+import { useContentPanel } from "./content-panel/content-panel";
 
 export default function Chat() {
   const [files, setFiles] = useState<File[]>([]);
 
-  const { toggleSidebar } = useSidebar();
-
   const { input, handleSubmit, status, handleInputChange, messages, error, reload } = useChat({
     api: "http://localhost:8080/chat",
   });
+
+  const { toggle } = useContentPanel();
 
   const { handleDragEnter, handleDragLeave, handleDragOver, handleDrop, isDragging } =
     useDragAndDropFile({ setFiles });
@@ -77,7 +77,7 @@ export default function Chat() {
             </ChatInput.Toolbar>
           </form>
         </div>
-        <Button onClick={toggleSidebar} className="fixed top-0 left-0">
+        <Button onClick={toggle} className="fixed top-0 left-0">
           Sidebar
         </Button>
       </div>
