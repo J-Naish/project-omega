@@ -17,8 +17,8 @@ export default function Chat() {
     api: "http://localhost:8080/chat",
   });
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
+  const handleFileChange = () => {
+    const files = fileInputRef.current?.files;
     if (files) {
       setFiles(Array.from(files));
     }
