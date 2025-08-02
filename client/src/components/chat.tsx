@@ -27,10 +27,6 @@ export default function Chat() {
     }
   };
 
-  const handleRemoveFile = (index: number) => {
-    setFiles(files.filter((_, i) => i !== index));
-  };
-
   const { handleDragEnter, handleDragLeave, handleDragOver, handleDrop, isDragging } =
     useDragAndDropFile({ setFiles });
 
@@ -57,7 +53,10 @@ export default function Chat() {
               <div className="absolute inset-0 bg-blue-500 opacity-50 z-10 pointer-events-none rounded-2xl" />
             )}
             <div>
-              <ChatInput.FilePreview files={files} onRemoveFile={handleRemoveFile} />
+              <ChatInput.FilePreview
+                files={files}
+                onRemoveFile={(idx: number) => setFiles(files.filter((_, i) => i !== idx))}
+              />
               <ChatInput.Textarea value={input} onChange={handleInputChange} />
             </div>
             <ChatInput.Toolbar>
