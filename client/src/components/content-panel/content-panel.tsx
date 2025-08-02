@@ -12,8 +12,34 @@ import {
 } from "@/components/ui/sidebar";
 import Markdown from "../markdown";
 
+interface CodeContent {
+  type: "code";
+  title: string;
+  content: string;
+}
+
+interface TextContent {
+  type: "text";
+  title: string;
+  content: string;
+}
+
+interface FileContent {
+  type: "file";
+  title: string;
+  content: File;
+}
+
+interface ToolContent {
+  type: "tool";
+  title: string;
+  content: string;
+}
+
+type Content = CodeContent | TextContent | FileContent | ToolContent;
+
 export function useContentPanel() {
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState<Content | null>(null);
 
   const { open, setOpen } = useSidebar();
 
@@ -44,7 +70,7 @@ export default function ContentPanel() {
         </div>
       </SidebarHeader>
       <SidebarContent className="px-8 pb-8">
-        <Markdown>{content}</Markdown>
+        {content && content.type !== "file" && <Markdown>{content.content}</Markdown>}
       </SidebarContent>
       <SidebarRail />
     </Sidebar>
