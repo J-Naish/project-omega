@@ -72,7 +72,7 @@ export default function Chat() {
         <div className="sticky bottom-0 pb-6">
           <form
             className={cn(
-              "rounded-2xl border focus-within:border-1 focus-within:border-blue-500 transition-all relative bg-input",
+              "rounded-2xl border focus-within:border-1 focus-within:border-blue-800 transition-all relative bg-input",
               isDragging && "border-blue-500 border-dashed"
             )}
           >
