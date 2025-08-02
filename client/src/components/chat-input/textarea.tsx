@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useCallback, useEffect, KeyboardEventHandler } from "react";
+import { useRef, useCallback, useEffect } from "react";
 import { Textarea as TextareaComponent } from "@/components/ui/textarea";
 
 function useAutoResizeTextarea({ minHeight, maxHeight }: { minHeight: number; maxHeight: number }) {
@@ -49,16 +49,6 @@ export function Textarea({ onChange, ...props }: React.ComponentProps<typeof Tex
     maxHeight: 400,
   });
 
-  const handleKeyDown: KeyboardEventHandler<HTMLTextAreaElement> = e => {
-    if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
-      e.preventDefault();
-      const form = e.currentTarget.form;
-      if (form) {
-        form.requestSubmit();
-      }
-    }
-  };
-
   return (
     <TextareaComponent
       className="w-full resize-none rounded-none border-none p-4 shadow-none outline-none ring-0 focus-visible:ring-0"
@@ -70,7 +60,6 @@ export function Textarea({ onChange, ...props }: React.ComponentProps<typeof Tex
         adjustHeight();
         onChange?.(e);
       }}
-      onKeyDown={handleKeyDown}
       placeholder="Type your message..."
       ref={textareaRef}
       {...props}

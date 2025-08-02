@@ -21,6 +21,15 @@ export default function Chat() {
   const { handleDragEnter, handleDragLeave, handleDragOver, handleDrop, isDragging } =
     useDragAndDropFile({ setFiles });
 
+  const isLoading = status === "submitted" || status === "streaming";
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && (e.metaKey || e.ctrlKey) && !isLoading) {
+      e.preventDefault();
+      handleSubmit();
+    }
+  };
+
   return (
     <div
       className="w-full flex justify-center"
@@ -39,6 +48,11 @@ export default function Chat() {
               "rounded-2xl border focus-within:border-1 focus-within:border-blue-800 transition-all relative bg-input",
               isDragging && "border-blue-500 border-dashed"
             )}
+            onKeyDown={handleKeyDown}
+            onSubmit={e => {
+              e.preventDefault();
+              handleSubmit();
+            }}
           >
             {isDragging && (
               <div className="absolute inset-0 bg-blue-500 opacity-50 z-10 pointer-events-none rounded-2xl" />
