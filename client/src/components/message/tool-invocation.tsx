@@ -1,6 +1,15 @@
 import Image from "next/image";
 import { type Message } from "ai";
 
+function formatJSON(jsonString: string): string {
+  try {
+    const jsonObject = JSON.parse(jsonString);
+    return JSON.stringify(jsonObject, null, 2);
+  } catch {
+    return jsonString;
+  }
+}
+
 export default function ToolInvocation({ part }: { part: NonNullable<Message["parts"]>[number] }) {
   if (part.type !== "tool-invocation") return null;
 
@@ -22,9 +31,7 @@ export default function ToolInvocation({ part }: { part: NonNullable<Message["pa
             <details className="cursor-pointer">
               <summary>View result</summary>
               <pre className="mt-1 text-xs bg-muted p-2 rounded overflow-x-auto">
-                {typeof part.toolInvocation.result === "string"
-                  ? part.toolInvocation.result
-                  : JSON.stringify(part.toolInvocation.result, null, 2)}
+                {formatJSON(part.toolInvocation.result)}
               </pre>
             </details>
           </div>
