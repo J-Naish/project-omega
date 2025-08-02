@@ -43,7 +43,7 @@ function useAutoResizeTextarea({ minHeight, maxHeight }: { minHeight: number; ma
   return { textareaRef, adjustHeight };
 }
 
-export function Textarea({ onChange, ...props }: React.ComponentProps<typeof TextareaComponent>) {
+export function Textarea({ value, onChange }: React.ComponentProps<typeof TextareaComponent>) {
   const { textareaRef, adjustHeight } = useAutoResizeTextarea({
     minHeight: 64,
     maxHeight: 400,
@@ -60,9 +60,9 @@ export function Textarea({ onChange, ...props }: React.ComponentProps<typeof Tex
         adjustHeight();
         onChange?.(e);
       }}
+      value={value}
       placeholder="Type your message..."
       ref={textareaRef}
-      {...props}
     />
   );
 }
