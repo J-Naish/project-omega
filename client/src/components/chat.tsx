@@ -5,6 +5,7 @@ import { useChat } from "@ai-sdk/react";
 import { Button } from "@/components/ui/button";
 import { useSidebar } from "@/components/ui/sidebar";
 import ChatInput from "./chat-input";
+import MessageArea from "./message/message-area";
 import { cn } from "@/lib/utils";
 
 export default function Chat() {
@@ -16,7 +17,7 @@ export default function Chat() {
 
   const { toggleSidebar } = useSidebar();
 
-  const { input, handleSubmit, status, handleInputChange } = useChat({
+  const { input, handleSubmit, status, handleInputChange, messages, error, reload } = useChat({
     api: "http://localhost:8080/chat",
   });
 
@@ -68,7 +69,9 @@ export default function Chat() {
       onDrop={handleDrop}
     >
       <div className="w-full max-w-6xl flex flex-col px-6">
-        <div className="flex-1">{/* Message Area */}</div>
+        <div className="flex-1">
+          <MessageArea messages={messages} status={status} error={error} onRetry={reload} />
+        </div>
         <div className="sticky bottom-0 pb-6">
           <form
             className={cn(

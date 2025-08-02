@@ -7,7 +7,7 @@ import AssistantMessage from "./assistant-message";
 import Spinner from "./spinner";
 import ErrorMessage from "./error-message";
 
-export function MessageArea({
+export default function MessageArea({
   messages,
   status,
   error,
