@@ -1,5 +1,6 @@
-import { Toolbar, FileInput } from "./toolbar";
+import { Toolbar } from "./toolbar";
 import { SendButton } from "./send-button";
+import { FileInput } from "./file-input";
 import { FilePreview } from "./file-preview";
 import { Textarea } from "./textarea";
 
