@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { useChat } from "@ai-sdk/react";
 import { Button } from "@/components/ui/button";
 import { useSidebar } from "@/components/ui/sidebar";
@@ -12,20 +12,11 @@ import { useDragAndDropFile } from "@/hooks/use-drag-and-drop-file";
 export default function Chat() {
   const [files, setFiles] = useState<File[]>([]);
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
   const { toggleSidebar } = useSidebar();
 
   const { input, handleSubmit, status, handleInputChange, messages, error, reload } = useChat({
     api: "http://localhost:8080/chat",
   });
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newFiles = e.target.files;
-    if (newFiles) {
-      setFiles(prevFiles => [...prevFiles, ...Array.from(newFiles)]);
-    }
-  };
 
   const { handleDragEnter, handleDragLeave, handleDragOver, handleDrop, isDragging } =
     useDragAndDropFile({ setFiles });
@@ -61,9 +52,7 @@ export default function Chat() {
             </div>
             <ChatInput.Toolbar>
               <ChatInput.FileInput
-                fileInputRef={fileInputRef}
-                onChange={handleFileChange}
-                onClick={() => fileInputRef.current?.click()}
+                onChange={newFiles => setFiles(prevFiles => [...prevFiles, ...newFiles])}
               />
               <ChatInput.SendButton onClick={handleSubmit} input={input} status={status} />
             </ChatInput.Toolbar>
